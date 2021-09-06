@@ -77,7 +77,6 @@ template<typename T>
 inline void Tree<T>::PrintSize()
 {
 	cout << "Текущий размер дерева равен: " << size << endl;
-	return 0;
 }
 
 template<typename T>
@@ -118,10 +117,10 @@ inline void Tree<T>::Edit(int key, T newData, Item*& root)
 		root->data = newData;
 	}
 	else if (key < root->key) {
-		Delete(key, root->left);
+		Edit(key, newData, root->left);
 	}
 	else if (key > root->key) {
-		Delete(key, root->right);
+		Edit(key, newData, root->right);
 	}
 }
 
@@ -209,7 +208,6 @@ inline Tree<T>::Iterator Tree<T>::end()
 {
 	Iterator it;
 	it.obj = root;
-	if (!it.obj) return;
 	it.Lt_Rt_t(it.obj->left);
 	it.Lt_Rt_t(it.obj->right);
 	return it;
