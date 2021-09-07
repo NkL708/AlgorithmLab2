@@ -11,11 +11,13 @@ class Tree
 		T data;
 		Item* right;
 		Item* left;
-		Item(int key, T data, Item* right = nullptr, Item* left = nullptr) {
+		Item* parent;
+		Item(int key, T data, Item* right = nullptr, Item* left = nullptr, Item* parent = nullptr) {
 			this->key = key;
 			this->data = data;
 			this->right = right;
 			this->left = left;
+			this->parent = parent;
 		}
 	};
 	
@@ -31,7 +33,7 @@ public:
 	bool IsEmpty();
 	void Read(int key, Item*& root);
 	void Edit(int key, T newData, Item*& root);
-	void Add(int key, T data, Item*& root);
+	void Add(int key, T data, Item*& root, Item*& parent);
 	void Delete(int key, Item*& root);
 	void Print(Item*& root, int indent = 0);
 	void t_Lt_Rt(Item*& root);
@@ -40,8 +42,8 @@ public:
 	public:
 		Item* obj;
 		T& operator*();
-		Iterator operator++(int);
-		Iterator operator--(int);
+		void operator++(int);
+		void operator--(int);
 		bool operator ==(const Iterator& it);
 		bool operator !=(const Iterator& it);
 		void Lt_Rt_t(Item*& root);
@@ -54,8 +56,8 @@ public:
 	public:
 		Item* obj;
 		T& operator*();
-		ReverseIterator operator++(int);
-		ReverseIterator operator--(int);
+		void operator++(int);
+		void operator--(int);
 		bool operator ==(const ReverseIterator& it);
 		bool operator !=(const ReverseIterator& it);
 	};
@@ -125,7 +127,7 @@ inline void Tree<T>::Edit(int key, T newData, Item*& root)
 }
 
 template<typename T>
-inline void Tree<T>::Add(int key, T data, Item*& root)
+inline void Tree<T>::Add(int key, T data, Item*& root, Item*& parent)
 {
 	if (!root) {
 		root = new Item(key, data);
@@ -135,16 +137,17 @@ inline void Tree<T>::Add(int key, T data, Item*& root)
 		cout << "Данный ключ уже существует в дереве" << endl;
 	}
 	else if (key < root->key) {
-		Add(key, data, root->left);
+		Add(key, data, root->left, root);
 	}
 	else if (key > root->key) {
-		Add(key, data, root->right);
+		Add(key, data, root->right, root);
 	}
 }
 
 template<typename T>
 inline void Tree<T>::Delete(int key, Item*& root)
 {
+	// Переделать
 	if (key == root->key) {
 		root = nullptr;
 		size--;
@@ -228,21 +231,22 @@ inline T& Tree<T>::Iterator::operator*()
 }
 
 template<typename T>
-inline Tree<T>::Iterator Tree<T>::Iterator::operator++(int)
+inline void Tree<T>::Iterator::operator++(int)
 {
 	Iterator it = *this;
-	if (!it.obj) return;
-	else if (it.obj->left) 
+	if (it.obj->left)
 		it.obj = it.obj->left;
 	else if (it.obj->right) 
 		it.obj = it.obj->right;
-	return it;
+	*this = it;
 }
 
 template<typename T>
-inline Tree<T>::Iterator Tree<T>::Iterator::operator--(int)
+inline void Tree<T>::Iterator::operator--(int)
 {
-	// Подумать
+	Iterator it = *this;
+	it.obj = it.obj->parent;
+	*this = it;
 }
 
 template<typename T>
@@ -262,29 +266,29 @@ inline bool Tree<T>::Iterator::operator!=(const Iterator& it)
 template<typename T>
 inline Tree<T>::ReverseIterator Tree<T>::rbegin()
 {
-
+	return ReverseIterator();
 }
 
 template<typename T>
 inline Tree<T>::ReverseIterator Tree<T>::rend()
 {
-
+	return ReverseIterator();
 }
 
 template<typename T>
 inline T& Tree<T>::ReverseIterator::operator*()
 {
-
+	return this->obj->data;
 }
 
 template<typename T>
-inline Tree<T>::ReverseIterator Tree<T>::ReverseIterator::operator++(int)
+inline void Tree<T>::ReverseIterator::operator++(int)
 {
 
 }
 
 template<typename T>
-inline Tree<T>::ReverseIterator Tree<T>::ReverseIterator::operator--(int)
+inline void Tree<T>::ReverseIterator::operator--(int)
 {
 
 }

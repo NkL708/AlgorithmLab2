@@ -8,6 +8,10 @@ int main() {
 	Tree<TYPE>::ReverseIterator reverseIterator;
 	int sw;
 	bool exit = false;
+	tree.Add(20, "Kolya", tree.root, tree.root);
+	tree.Add(322, "Katya", tree.root, tree.root);
+	tree.Add(5, "Vova", tree.root, tree.root);
+
 	while (!exit) {
 		sw = 0;
 		int key;
@@ -24,20 +28,24 @@ int main() {
 		cout << "9. Вывести ключи методом t_Lt_Rt" << endl;
 		cout << "10. Присвоить begin() итератору" << endl;
 		cout << "11. Присвоить end() итератору" << endl;
-		cout << "12. Выполнить iterator++" << endl;
-		cout << "13. Выполнить iterator--" << endl;
-		cout << "14. Проверить, равен ли итератор begin()" << endl;
-		cout << "15. Проверить, равен ли итератор end()" << endl;
-		cout << "16. Проверить, не равен ли итератор begin()" << endl;
-		cout << "17. Проверить, не равен ли итератор end()" << endl;
-		cout << "18. Присвоить rbegin() обратному итератору" << endl;
-		cout << "19. Присвоить rend() обратному итератору" << endl;
-		cout << "20. Выполнить reverseiterator++" << endl;
-		cout << "21. Выполнить reverseiterator--" << endl;
-		cout << "22. Проверить, равен ли обратный итератор rbegin()" << endl;
-		cout << "23. Проверить, равен ли итератор rend()" << endl;
-		cout << "24. Проверить, не равен ли обртаный итератор rbegin()" << endl;
-		cout << "25. Проверить, не равен ли обртаный итератор rend()" << endl;
+		cout << "12. Вывести значение итератора" << endl;
+		cout << "13. Выполнить iterator++" << endl;
+		cout << "14. Выполнить iterator--" << endl;
+		cout << "15. Проверить, равен ли итератор begin()" << endl;
+		cout << "16. Проверить, равен ли итератор end()" << endl;
+		cout << "17. Проверить, не равен ли итератор begin()" << endl;
+		cout << "18. Проверить, не равен ли итератор end()" << endl;
+		cout << "19. Присвоить rbegin() обратному итератору" << endl;
+		cout << "20. Присвоить rend() обратному итератору" << endl;
+		cout << "21. Вывести значение обратного итератора" << endl;
+		cout << "22. Выполнить reverseIterator++" << endl;
+		cout << "23. Выполнить reverseIterator--" << endl;
+		cout << "24. Проверить, равен ли обратный итератор rbegin()" << endl;
+		cout << "25. Проверить, равен ли итератор rend()" << endl;
+		cout << "26. Проверить, не равен ли обртаный итератор rbegin()" << endl;
+		cout << "27. Проверить, не равен ли обртаный итератор rend()" << endl;
+		cout << "28. Операция по варику" << endl;
+		cout << "29. Выход из программы" << endl;
 		cout << endl;
 		cout << "Введите номер операции: ";
 		cin >> sw;
@@ -68,7 +76,7 @@ int main() {
 			cin >> key;
 			cout << "Введите новое значение ";
 			cin >> value;
-			tree.Add(key, value, tree.root);
+			tree.Add(key, value, tree.root, tree.root);
 			break;
 		case 7:
 			cout << "Введите ключ ";
@@ -88,46 +96,58 @@ int main() {
 			iterator = tree.end();
 			break;
 		case 12:
-			iterator++;
+			cout << *iterator;
 			break;
 		case 13:
-			iterator--;
+			iterator++;
 			break;
 		case 14:
-			cout << (iterator == tree.begin());
+			iterator--;
 			break;
 		case 15:
-			cout << (iterator == tree.end());
+			cout << (iterator == tree.begin());
 			break;
 		case 16:
-			cout << (iterator != tree.begin());
+			cout << (iterator == tree.end());
 			break;
 		case 17:
-			cout << (iterator != tree.end());
+			cout << (iterator != tree.begin());
 			break;
 		case 18:
-			reverseIterator = tree.rbegin();
+			cout << (iterator != tree.end());
 			break;
 		case 19:
-			reverseIterator = tree.rend();
+			reverseIterator = tree.rbegin();
 			break;
 		case 20:
-			reverseIterator++;
+			reverseIterator = tree.rend();
 			break;
 		case 21:
-			reverseIterator--;
+			cout << *reverseIterator;
 			break;
 		case 22:
-			cout << (reverseIterator == tree.rbegin());
+			reverseIterator++;
 			break;
 		case 23:
-			cout << (reverseIterator == tree.rend());
+			reverseIterator--;
 			break;
 		case 24:
-			cout << (reverseIterator != tree.rbegin());
+			cout << (reverseIterator == tree.rbegin());
 			break;
 		case 25:
+			cout << (reverseIterator == tree.rend());
+			break;
+		case 26:
+			cout << (reverseIterator != tree.rbegin());
+			break;
+		case 27:
 			cout << (reverseIterator != tree.rend());
+			break;
+		case 28:
+			// Доделать
+			break;
+		case 29:
+			exit = true;
 			break;
 		default:
 			cout << "Данного индекса не существует" << endl;
