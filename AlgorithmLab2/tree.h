@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
+#include <stack>
 using namespace std;
 
 template <typename T>
@@ -32,6 +33,7 @@ public:
 	void Delete(int key, Item*& root);
 	void Print(Item*& root, int indent = 0);
 	void t_Lt_Rt(Item*& root);
+	int GetHeight(Item*& root);
 
 	class Iterator {
 	public:

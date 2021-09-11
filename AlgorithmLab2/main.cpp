@@ -8,9 +8,13 @@ int main() {
 	Tree<TYPE>::ReverseIterator reverseIterator;
 	int sw;
 	bool exit = false;
-	tree.Add(20, "Kolya", tree.root, tree.root);
-	tree.Add(322, "Katya", tree.root, tree.root);
-	tree.Add(5, "Vova", tree.root, tree.root);
+	tree.Add(10, "10", tree.root, tree.root);
+	tree.Add(9, "9", tree.root, tree.root);
+	tree.Add(12, "12", tree.root, tree.root);
+	tree.Add(7, "7", tree.root, tree.root);
+	tree.Add(8, "8", tree.root, tree.root);
+	tree.Add(11, "11", tree.root, tree.root);
+	tree.Add(13, "13", tree.root, tree.root);
 
 	while (!exit) {
 		sw = 0;
@@ -24,7 +28,7 @@ int main() {
 		cout << "5. Изменить значение по ключу" << endl;
 		cout << "6. Добавить значение по ключу" << endl;
 		cout << "7. Удалить значение по ключу" << endl;
-		cout << "8. Вывести бинарное дерево в консоль" << endl;
+		cout << "8. Вывести дерево в консоль" << endl;
 		cout << "9. Вывести ключи методом t_Lt_Rt" << endl;
 		cout << "10. Присвоить begin() итератору" << endl;
 		cout << "11. Присвоить end() итератору" << endl;
@@ -44,11 +48,12 @@ int main() {
 		cout << "25. Проверить, равен ли итератор rend()" << endl;
 		cout << "26. Проверить, не равен ли обртаный итератор rbegin()" << endl;
 		cout << "27. Проверить, не равен ли обртаный итератор rend()" << endl;
-		cout << "28. Операция по варику" << endl;
+		cout << "28. Вычисление высоты дерева" << endl;
 		cout << "29. Выход из программы" << endl;
 		cout << endl;
 		cout << "Введите номер операции: ";
 		cin >> sw;
+		system("cls");
 		switch (sw) {
 		case 1:
 			tree.PrintSize();
@@ -144,7 +149,7 @@ int main() {
 			cout << (reverseIterator != tree.rend());
 			break;
 		case 28:
-			// Доделать
+			cout << tree.GetHeight(tree.root);
 			break;
 		case 29:
 			exit = true;

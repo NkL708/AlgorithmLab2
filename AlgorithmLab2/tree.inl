@@ -1,3 +1,4 @@
+#include "tree.h"
 template<typename T>
 inline Tree<T>::Item::Item(int key, T data, Item* right, Item* left, Item* parent)
 {
@@ -68,7 +69,8 @@ inline void Tree<T>::Add(int key, T data, Item*& root, Item*& parent)
 {
 	if (!root) {
 		root = new Item(key, data);
-		root->parent = parent;
+		if (root != parent)
+			root->parent = parent;
 		size++;
 	}
 	else if (key == root->key)
@@ -133,6 +135,20 @@ inline void Tree<T>::t_Lt_Rt(Item*& root)
 }
 
 template<typename T>
+inline int Tree<T>::GetHeight(Item*& root)
+{
+	// Итеративный алгоритм с методички
+	int h1 = 0, h2 = 0;
+	if (!root)
+		return 0;
+	if (root->left)
+		h2 = GetHeight(root->left);
+	if (root->right)
+		h1 = GetHeight(root->right);
+	return (max(h1, h2) + 1);
+}
+
+template<typename T>
 inline void Tree<T>::Print_Lt_Rt_t(Item*& root)
 {
 	if (!root) return;
@@ -152,12 +168,20 @@ inline Tree<T>::Iterator Tree<T>::begin()
 template<typename T>
 inline Tree<T>::Iterator Tree<T>::end()
 {
+	// Итеративный алгоритм с методички
 	Iterator it;
-	it.obj = root;
-	while (it.obj->left)
-		it.obj = it.obj->left;
-	while (it.obj->right)
-		it.obj = it.obj->right;
+	it.obj = nullptr;
+	stack<Item*> stack;
+	stack.push(root);
+	while (!stack.empty()) {
+		Item* current = stack.top();
+		it.obj = current;
+		stack.pop();
+		if (current->right)
+			stack.push(current->right);
+		if (current->left)
+			stack.push(current->left);
+	}
 	return it;
 }
 
@@ -180,12 +204,30 @@ template<typename T>
 inline void Tree<T>::Iterator::operator++(int)
 {
 	Iterator it = *this;
-	if (it.obj->left)
-		it.obj = it.obj->left;
-	else if (it.obj->right)
-		it.obj = it.obj->right;
-	else {
-		// Написать!
+	// Возвращение к корню дерева
+	while (it.obj->parent)
+		it.obj = it.obj->parent;
+	stack<Item*> stack;
+	// Помещаем корень в стек
+	stack.push(it.obj);
+	while (!stack.empty()) {
+		// Буфер текущего элемента важен
+		Item* current = stack.top();
+		// Достаём элемент, помещаем в стек его потомков
+		stack.pop();
+		if (current->right)
+			stack.push(current->right);
+		if (current->left)
+			stack.push(current->left);
+		// Если нашли итератор, отдаём следующему элементу в стеке
+		if (current == this->obj && stack.size()) {
+			it.obj = stack.top();
+			break;
+		}
+		else if (!stack.size()) {
+			cout << "Выход за пределы!" << endl;
+			return;
+		}
 	}
 	*this = it;
 }
@@ -194,7 +236,31 @@ template<typename T>
 inline void Tree<T>::Iterator::operator--(int)
 {
 	Iterator it = *this;
-	it.obj = it.obj->parent;
+	if (it.obj->parent == nullptr) {
+		cout << "Выход за пределы!" << endl;
+		return;
+	}
+	// Возвращение к корню дерева
+	while (it.obj->parent)
+		it.obj = it.obj->parent;
+	stack<Item*> stack;
+	// Помещаем корень в стек
+	stack.push(it.obj);
+	while (!stack.empty()) {
+		// Буфер текущего элемента важен
+		Item* current = stack.top();
+		// Достаём элемент, помещаем в стек его потомков
+		stack.pop();
+		if (current->right)
+			stack.push(current->right);
+		if (current->left)
+			stack.push(current->left);
+		// Если нашли итератор, отдаём предыдущему (буфер) элементу в стеке
+		if (stack.top() == this->obj) {
+			it.obj = current;
+			break;
+		}
+	}
 	*this = it;
 }
 
@@ -215,13 +281,29 @@ inline bool Tree<T>::Iterator::operator!=(const Iterator& it)
 template<typename T>
 inline Tree<T>::ReverseIterator Tree<T>::rbegin()
 {
-	return ReverseIterator();
+	// Итеративный алгоритм с методички
+	ReverseIterator it;
+	it.obj = nullptr;
+	stack<Item*> stack;
+	stack.push(root);
+	while (!stack.empty()) {
+		Item* current = stack.top();
+		it.obj = current;
+		stack.pop();
+		if (current->right)
+			stack.push(current->right);
+		if (current->left)
+			stack.push(current->left);
+	}
+	return it;
 }
 
 template<typename T>
 inline Tree<T>::ReverseIterator Tree<T>::rend()
 {
-	return ReverseIterator();
+	ReverseIterator it;
+	it.obj = root;
+	return it;
 }
 
 template<typename T>
@@ -233,13 +315,65 @@ inline T& Tree<T>::ReverseIterator::operator*()
 template<typename T>
 inline void Tree<T>::ReverseIterator::operator++(int)
 {
-
+	ReverseIterator it = *this;
+	if (it.obj->parent == nullptr) {
+		cout << "Выход за пределы!" << endl;
+		return;
+	}
+	// Возвращение к корню дерева
+	while (it.obj->parent)
+		it.obj = it.obj->parent;
+	stack<Item*> stack;
+	// Помещаем корень в стек
+	stack.push(it.obj);
+	while (!stack.empty()) {
+		// Буфер текущего элемента важен
+		Item* current = stack.top();
+		// Достаём элемент, помещаем в стек его потомков
+		stack.pop();
+		if (current->right)
+			stack.push(current->right);
+		if (current->left)
+			stack.push(current->left);
+		// Если нашли итератор, отдаём предыдущему (буфер) элементу в стеке
+		if (stack.top() == this->obj) {
+			it.obj = current;
+			break;
+		}
+	}
+	*this = it;
 }
 
 template<typename T>
 inline void Tree<T>::ReverseIterator::operator--(int)
 {
-
+	ReverseIterator it = *this;
+	// Возвращение к корню дерева
+	while (it.obj->parent)
+		it.obj = it.obj->parent;
+	stack<Item*> stack;
+	// Помещаем корень в стек
+	stack.push(it.obj);
+	while (!stack.empty()) {
+		// Буфер текущего элемента важен
+		Item* current = stack.top();
+		// Достаём элемент, помещаем в стек его потомков
+		stack.pop();
+		if (current->right)
+			stack.push(current->right);
+		if (current->left)
+			stack.push(current->left);
+		// Если нашли итератор, отдаём следующему элементу в стеке
+		if (current == this->obj && stack.size()) {
+			it.obj = stack.top();
+			break;
+		}
+		else if (!stack.size()) {
+			cout << "Выход за пределы!" << endl;
+			return;
+		}
+	}
+	*this = it;
 }
 
 template<typename T>
