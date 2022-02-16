@@ -12,9 +12,9 @@ int main() {
 
 	while (!exit) {
 		std::cout << "\n\tСПИСОК ОПЕРАЦИЙ\n";
-		std::cout << "\t1. Получить размер списка\n";
-		std::cout << "\t2. Очистить список\n";
-		std::cout << "\t3. Проверить список на пустоту\n";
+		std::cout << "\t1. Получить размер дерева\n";
+		std::cout << "\t2. Очистить дерево\n";
+		std::cout << "\t3. Проверить дерево на пустоту\n";
 		std::cout << "\t4. Чтение значения по ключу\n";
 		std::cout << "\t5. Изменить значение по ключу\n";
 		std::cout << "\t6. Добавить значение по ключу\n";
@@ -45,7 +45,7 @@ int main() {
 		std::cin >> sw;
 		switch (sw) {
 		case 1:
-			tree.printSize();
+			std::cout << tree.getSize();
 			break;
 		case 2:
 			tree.clear(tree.root);

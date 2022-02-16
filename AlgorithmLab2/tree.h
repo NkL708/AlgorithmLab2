@@ -24,10 +24,10 @@ public:
 
 	Tree();
 	~Tree();
-	void printSize();
+	int getSize();
 	void clear(Item*& root);
 	bool isEmpty();
-	void read(int key, Item*& root);
+	T read(int key, Item*& root);
 	void edit(int key, T newData, Item*& root);
 	void add(int key, T data, Item*& root, Item*& parent);
 	void deleteItem(int key, Item*& root);
@@ -81,13 +81,13 @@ inline Tree<T>::Tree()
 template<typename T>
 inline Tree<T>::~Tree()
 {
-
+	clear(root);
 }
 
 template<typename T>
-inline void Tree<T>::printSize()
+inline int Tree<T>::getSize()
 {
-	std::cout << "Текущий размер дерева равен: " << size << std::endl;
+	return size;
 }
 
 template<typename T>
@@ -106,15 +106,19 @@ inline void Tree<T>::clear(Item*& root)
 template<typename T>
 inline bool Tree<T>::isEmpty() 
 {
-	if (!root) return true;
-	else return false;
+	if (size > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 template<typename T>
-inline void Tree<T>::read(int key, Item*& root)
+inline T Tree<T>::read(int key, Item*& root)
 {
 	if (key == root->key) {
-		std::cout << "Данные элемента с ключом " << key << ": " << root->data << std::endl;
+		return root->data;
 	}
 	else if (key < root->key) {
 		read(key, root->left);
