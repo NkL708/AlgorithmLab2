@@ -34,7 +34,7 @@ public:
 	void add(int key, T data, Item*& root, Item*& parent);
 	void deleteItem(int key, Item*& root);
 	void printHorizontal(Item*& root, int indent = 0);
-	void printVertical(Item*& root, int indent = 0);
+	void printVertical(Item*& root);
 	void t_Lt_Rt(Item*& root);
 	int getTreeHeight(Item*& root);
 	int getDepth(Item*& target);
@@ -222,7 +222,7 @@ inline void Tree<T>::printHorizontal(Item*& root, int indent)
 
 // Итеративный вывод
 template<typename T>
-inline void Tree<T>::printVertical(Item*& root, int indent)
+inline void Tree<T>::printVertical(Item*& root)
 {
 	if (root) {
 		int height = getTreeHeight(root);
