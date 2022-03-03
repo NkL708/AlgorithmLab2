@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <stack>
+#include <queue>
 
 template <typename T>
 class Tree
@@ -13,6 +14,7 @@ class Tree
 		Item* right;
 		Item* left;
 		Item* parent;
+		int consoleW;
 		Item(int key, T data, Item* right = nullptr, Item* left = nullptr, Item* parent = nullptr);
 	};
 
@@ -31,9 +33,11 @@ public:
 	void edit(int key, T newData, Item*& root);
 	void add(int key, T data, Item*& root, Item*& parent);
 	void deleteItem(int key, Item*& root);
-	void print(Item*& root, int indent = 0);
+	void printHorizontal(Item*& root, int indent = 0);
+	void printVertical(Item*& root, int indent = 0);
 	void t_Lt_Rt(Item*& root);
-	int getHeight(Item*& root);
+	int getTreeHeight(Item*& root);
+	int getDepth(Item*& target);
 
 	class Iterator 
 	{
@@ -191,12 +195,13 @@ inline void Tree<T>::deleteItem(int key, Item*& root)
 	}
 }
 
+// Рекурсивный вывод
 template<typename T>
-inline void Tree<T>::print(Item*& root, int indent)
+inline void Tree<T>::printHorizontal(Item*& root, int indent)
 {
 	if (root) {
 		if (root->right) {
-			print(root->right, indent + 4);
+			printHorizontal(root->right, indent + 4);
 		}
 		if (indent) {
 			std::cout << std::setw(indent) << ' ';
@@ -207,12 +212,78 @@ inline void Tree<T>::print(Item*& root, int indent)
 		std::cout << root->key << ":" << root->data << "\n ";
 		if (root->left) {
 			std::cout << std::setw(indent) << ' ' << " \\\n";
-			print(root->left, indent + 4);
+			printHorizontal(root->left, indent + 4);
 		}
 	}
 	else {
 		std::cout << "Дерево пустое\n";
 	}	
+}
+
+// Итеративный вывод
+template<typename T>
+inline void Tree<T>::printVertical(Item*& root, int indent)
+{
+	if (root) {
+		int height = getTreeHeight(root);
+		std::queue<Item*>* treeLevels = new std::queue<Item*>[height];
+		// Заполнение очередей по уровням
+		for (int i = 1; i <= height; i++) {
+			std::stack<Item*> stack;
+			stack.push(root);
+			while (!stack.empty()) {
+				Item* current = stack.top();
+				// Достаём элемент, помещаем в стек его потомков
+				stack.pop();
+				if (current->right) {
+					stack.push(current->right);
+				}
+				if (current->left) {
+					stack.push(current->left);
+				}
+				// Если текущий элемент с нужного уровня дерева
+				if (getDepth(current) == i) {
+					treeLevels[i - 1].push(current);
+				}
+			}
+		}
+		// Вывод всех очередей в консоль
+		int step = 10;
+		for (int i = 0; i < height; i++) {
+			bool first = true;
+			while (!treeLevels[i].empty()) {
+				Item* current = treeLevels[i].front();
+				int rNum = rand() % 3;
+				int lenght;
+				// Корень дерева
+				if (!current->parent) {
+					// Примерно центр консоли
+					current->consoleW = 50;
+					std::cout << std::setw(current->consoleW);
+				}
+				// Левый
+				else if (current->parent->key > current->key) {
+					current->consoleW = current->parent->consoleW - (step + rNum);
+					lenght = current->parent->consoleW;
+					std::cout << std::setw(lenght) << "/\n";
+					std::cout << std::setw(current->consoleW);
+				}
+				// Правый
+				else if (current->parent->key < current->key) {
+					current->consoleW = current->parent->consoleW + (step + rNum);
+					lenght = current->consoleW;
+					std::cout << std::setw(lenght) << "\\\n";
+					std::cout << std::setw(current->consoleW);
+				}
+				std::cout << current->key << ':' << current->data << "\n";
+				treeLevels[i].pop();
+			}
+		}
+		delete[] treeLevels;
+	}
+	else {
+		std::cout << "Дерево пустое\n";
+	}
 }
 
 template<typename T>
@@ -227,7 +298,7 @@ inline void Tree<T>::t_Lt_Rt(Item*& root)
 }
 
 template<typename T>
-inline int Tree<T>::getHeight(Item*& root)
+inline int Tree<T>::getTreeHeight(Item*& root)
 {
 	// Итеративный алгоритм с методички
 	int h1 = 0, h2 = 0;
@@ -235,12 +306,24 @@ inline int Tree<T>::getHeight(Item*& root)
 		return 0;
 	}
 	if (root->left) {
-		h2 = getHeight(root->left);
+		h2 = getTreeHeight(root->left);
 	}
 	if (root->right) {
-		h1 = getHeight(root->right);
+		h1 = getTreeHeight(root->right);
 	}
 	return (std::max(h1, h2) + 1);
+}
+
+template<typename T>
+inline int Tree<T>::getDepth(Item*& target)
+{
+	Item* current = target;
+	int depth = 1;
+	while (current != root) {
+		current = current->parent;
+		depth++;
+	}
+	return depth;
 }
 
 template<typename T>

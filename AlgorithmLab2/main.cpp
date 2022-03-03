@@ -10,6 +10,17 @@ int main() {
 	int sw = 0, key;
 	bool exit = false;
 
+	// For debug
+	tree.add(25, "String1", tree.root, tree.root);
+	tree.add(13, "String2", tree.root, tree.root);
+	tree.add(100, "String3", tree.root, tree.root);
+	tree.add(15, "String4", tree.root, tree.root);
+	tree.add(2, "String5", tree.root, tree.root);
+	tree.add(63, "String6", tree.root, tree.root);
+	tree.add(8, "String7", tree.root, tree.root);
+	tree.add(42, "String8", tree.root, tree.root);
+
+
 	while (!exit) {
 		std::cout << "\n\tСПИСОК ОПЕРАЦИЙ\n";
 		std::cout << "\t1. Получить размер дерева\n";
@@ -19,28 +30,29 @@ int main() {
 		std::cout << "\t5. Изменить значение по ключу\n";
 		std::cout << "\t6. Добавить значение по ключу\n";
 		std::cout << "\t7. Удалить значение по ключу\n";
-		std::cout << "\t8. Вывести дерево в консоль\n";
-		std::cout << "\t9. Вывести ключи методом t_Lt_Rt\n";
-		std::cout << "\t10. Присвоить begin() итератору\n";
-		std::cout << "\t11. Присвоить end() итератору\n";
-		std::cout << "\t12. Вывести значение итератора\n";
-		std::cout << "\t13. Выполнить iterator++\n";
-		std::cout << "\t14. Выполнить iterator--\n";
-		std::cout << "\t15. Проверить, равен ли итератор begin()\n";
-		std::cout << "\t16. Проверить, равен ли итератор end()\n";
-		std::cout << "\t17. Проверить, не равен ли итератор begin()\n";
-		std::cout << "\t18. Проверить, не равен ли итератор end()\n";
-		std::cout << "\t19. Присвоить rbegin() обратному итератору\n";
-		std::cout << "\t20. Присвоить rend() обратному итератору\n";
-		std::cout << "\t21. Вывести значение обратного итератора\n";
-		std::cout << "\t22. Выполнить reverseIterator++\n";
-		std::cout << "\t23. Выполнить reverseIterator--\n";
-		std::cout << "\t24. Проверить, равен ли обратный итератор rbegin()\n";
-		std::cout << "\t25. Проверить, равен ли итератор rend()\n";
-		std::cout << "\t26. Проверить, не равен ли обртаный итератор rbegin()\n";
-		std::cout << "\t27. Проверить, не равен ли обртаный итератор rend()\n";
-		std::cout << "\t28. Вычисление высоты дерева\n";
-		std::cout << "\t29. Выход из программы\n\n";
+		std::cout << "\t8. Вывести дерево в консоль (Горизонтально)\n";
+		std::cout << "\t9. Вывести дерево в консоль (Вертикально)\n";
+		std::cout << "\t10. Вывести ключи методом t_Lt_Rt\n";
+		std::cout << "\t11. Присвоить begin() итератору\n";
+		std::cout << "\t12. Присвоить end() итератору\n";
+		std::cout << "\t13. Вывести значение итератора\n";
+		std::cout << "\t14. Выполнить iterator++\n";
+		std::cout << "\t15. Выполнить iterator--\n";
+		std::cout << "\t16. Проверить, равен ли итератор begin()\n";
+		std::cout << "\t17. Проверить, равен ли итератор end()\n";
+		std::cout << "\t18. Проверить, не равен ли итератор begin()\n";
+		std::cout << "\t19. Проверить, не равен ли итератор end()\n";
+		std::cout << "\t20. Присвоить rbegin() обратному итератору\n";
+		std::cout << "\t21. Присвоить rend() обратному итератору\n";
+		std::cout << "\t22. Вывести значение обратного итератора\n";
+		std::cout << "\t23. Выполнить reverseIterator++\n";
+		std::cout << "\t24. Выполнить reverseIterator--\n";
+		std::cout << "\t25. Проверить, равен ли обратный итератор rbegin()\n";
+		std::cout << "\t26. Проверить, равен ли итератор rend()\n";
+		std::cout << "\t27. Проверить, не равен ли обртаный итератор rbegin()\n";
+		std::cout << "\t28. Проверить, не равен ли обртаный итератор rend()\n";
+		std::cout << "\t29. Вычисление высоты дерева\n";
+		std::cout << "\t30. Выход из программы\n\n";
 		std::cout << "Введите номер операции: \n";
 		std::cin >> sw;
 		switch (sw) {
@@ -78,69 +90,72 @@ int main() {
 			tree.deleteItem(key, tree.root);
 			break;
 		case 8:
-			tree.print(tree.root);
+			tree.printHorizontal(tree.root);
 			break;
 		case 9:
-			tree.t_Lt_Rt(tree.root);
+			tree.printVertical(tree.root);
 			break;
 		case 10:
-			iterator = tree.begin();
+			tree.t_Lt_Rt(tree.root);
 			break;
 		case 11:
-			iterator = tree.end();
+			iterator = tree.begin();
 			break;
 		case 12:
-			std::cout << *iterator;
+			iterator = tree.end();
 			break;
 		case 13:
-			iterator++;
+			std::cout << *iterator;
 			break;
 		case 14:
-			iterator--;
+			iterator++;
 			break;
 		case 15:
-			std::cout << (iterator == tree.begin());
+			iterator--;
 			break;
 		case 16:
-			std::cout << (iterator == tree.end());
+			std::cout << (iterator == tree.begin());
 			break;
 		case 17:
-			std::cout << (iterator != tree.begin());
+			std::cout << (iterator == tree.end());
 			break;
 		case 18:
-			std::cout << (iterator != tree.end());
+			std::cout << (iterator != tree.begin());
 			break;
 		case 19:
-			reverseIterator = tree.rBegin();
+			std::cout << (iterator != tree.end());
 			break;
 		case 20:
-			reverseIterator = tree.rEnd();
+			reverseIterator = tree.rBegin();
 			break;
 		case 21:
-			std::cout << *reverseIterator;
+			reverseIterator = tree.rEnd();
 			break;
 		case 22:
-			reverseIterator++;
+			std::cout << *reverseIterator;
 			break;
 		case 23:
-			reverseIterator--;
+			reverseIterator++;
 			break;
 		case 24:
-			std::cout << (reverseIterator == tree.rBegin());
+			reverseIterator--;
 			break;
 		case 25:
-			std::cout << (reverseIterator == tree.rEnd());
+			std::cout << (reverseIterator == tree.rBegin());
 			break;
 		case 26:
-			std::cout << (reverseIterator != tree.rBegin());
+			std::cout << (reverseIterator == tree.rEnd());
 			break;
 		case 27:
-			std::cout << (reverseIterator != tree.rEnd());
+			std::cout << (reverseIterator != tree.rBegin());
 			break;
 		case 28:
-			std::cout << tree.getHeight(tree.root);
+			std::cout << (reverseIterator != tree.rEnd());
 			break;
 		case 29:
+			std::cout << tree.getTreeHeight(tree.root);
+			break;
+		case 30:
 			exit = true;
 			break;
 		default:
@@ -148,5 +163,5 @@ int main() {
 			break;
 		}
 	}
-	return 1;
+	return 0;
 }
