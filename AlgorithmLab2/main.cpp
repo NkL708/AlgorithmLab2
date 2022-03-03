@@ -10,15 +10,15 @@ int main() {
 	int sw = 0, key;
 	bool exit = false;
 
-	// For debug
-	tree.add(25, "String1", tree.root, tree.root);
-	tree.add(13, "String2", tree.root, tree.root);
-	tree.add(100, "String3", tree.root, tree.root);
-	tree.add(15, "String4", tree.root, tree.root);
-	tree.add(2, "String5", tree.root, tree.root);
-	tree.add(63, "String6", tree.root, tree.root);
-	tree.add(8, "String7", tree.root, tree.root);
-	tree.add(42, "String8", tree.root, tree.root);
+	// Для отладки
+	//tree.add(25, "String1", tree.root, tree.root);
+	//tree.add(13, "String2", tree.root, tree.root);
+	//tree.add(100, "String3", tree.root, tree.root);
+	//tree.add(15, "String4", tree.root, tree.root);
+	//tree.add(2, "String5", tree.root, tree.root);
+	//tree.add(63, "String6", tree.root, tree.root);
+	//tree.add(8, "String7", tree.root, tree.root);
+	//tree.add(42, "String8", tree.root, tree.root);
 
 
 	while (!exit) {
