@@ -4,45 +4,51 @@
 #include <stack>
 #include <queue>
 
-typedef unsigned long long INT_64;
-
 template <typename T>
 class Tree
 {
 	struct Item 
 	{
-		INT_64 key;
+		int key;
 		T data;
 		Item* right;
 		Item* left;
 		Item* parent;
 		int consoleW;
-		Item(INT_64 key, T data, Item* right = nullptr, Item* left = nullptr, Item* parent = nullptr);
+		Item(int key, T data, Item* right = nullptr, Item* left = nullptr, Item* parent = nullptr);
 	};
 
 	void print_Lt_Rt_t(Item*& root);
-	Tree<T>::Item* lt_Rt_t(Item*& root);
+
+	Tree<T>::Item* lt_Rt_t(Item*& root) {
+		if (!root) {
+			return nullptr;
+		}
+		lt_Rt_t(root->left);
+		lt_Rt_t(root->right);
+		return root;
+	}
 public:
-	int viewedItems = 0;
+
+	int elemViewed = 1;
 	int size = 0;
 	Item* root = nullptr;
 
-	Tree();															// Конструктор
-	~Tree();														// Деструктор
-	int getSize();													// Получение размера
-	void clear(Item*& root);										// Очистка
-	bool isEmpty();													// Проверка на пустоту
-	T read(INT_64 key, Item*& root);								// Чтение значения
-	void edit(INT_64 key, T newData, Item*& root);					// Изменение значения
-	void add(INT_64 key, T data, Item*& root, Item*& parent);		// Добавление значения
-	void deleteItem(INT_64 key, Item*& root);						// Удаление значения
-	void printHorizontal(Item*& root, int indent = 0);				// Вывод горизонтальный
-	void printVertical(Item*& root);								// Вывод вертикальный
+	Tree();
+	~Tree();
+	int getSize();
+	void clear(Item*& root);
+	bool isEmpty();
+	T read(int key, Item*& root);
+	void edit(int key, T newData, Item*& root);
+	void add(int key, T data, Item*& root, Item*& parent);
+	void deleteItem(int key, Item*& root);
+	void printHorizontal(Item*& root, int indent = 0);
+	void printVertical(Item*& root);
 	void t_Lt_Rt(Item*& root);
-	int getTreeHeight(Item*& root);									// Получение высоты дерева
-	int getDepth(Item*& target);									// Получение уровня элемента
-	bool isContain(INT_64 key, Item*& root);						// Содержит ли дерево значение
-	int getViewedItems();
+	int getTreeHeight(Item*& root);
+	int getDepth(Item*& target);
+	int getElemViewed();
 
 	class Iterator 
 	{
@@ -54,8 +60,32 @@ public:
 		bool operator ==(const Iterator& it);
 		bool operator !=(const Iterator& it);
 	};
-	Iterator begin();
-	Iterator end();
+
+	Iterator begin() {
+		Iterator it;
+		it.obj = root;
+		return it;
+	}
+
+	Iterator end() {
+		// Итеративный алгоритм с методички
+		Iterator it;
+		it.obj = nullptr;
+		std::stack<Item*> stack;
+		stack.push(root);
+		while (!stack.empty()) {
+			Item* current = stack.top();
+			it.obj = current;
+			stack.pop();
+			if (current->right) {
+				stack.push(current->right);
+			}
+			if (current->left) {
+				stack.push(current->left);
+			}
+		}
+		return it;
+	}
 
 	class ReverseIterator 
 	{
@@ -67,12 +97,36 @@ public:
 		bool operator ==(const ReverseIterator& it);
 		bool operator !=(const ReverseIterator& it);
 	};
-	ReverseIterator rBegin();
-	ReverseIterator rEnd();
+
+	ReverseIterator rBegin() {
+		// Итеративный алгоритм с методички
+		ReverseIterator it;
+		it.obj = nullptr;
+		std::stack<Item*> stack;
+		stack.push(root);
+		while (!stack.empty()) {
+			Item* current = stack.top();
+			it.obj = current;
+			stack.pop();
+			if (current->right) {
+				stack.push(current->right);
+			}
+			if (current->left) {
+				stack.push(current->left);
+			}
+		}
+		return it;
+	}
+
+	ReverseIterator rEnd() {
+		ReverseIterator it;
+		it.obj = root;
+		return it;
+	}
 };
 
 template<typename T>
-inline Tree<T>::Item::Item(INT_64 key, T data, Item* right, Item* left, Item* parent)
+inline Tree<T>::Item::Item(int key, T data, Item* right, Item* left, Item* parent)
 {
 	this->key = key;
 	this->data = data;
@@ -102,16 +156,14 @@ inline int Tree<T>::getSize()
 template<typename T>
 inline void Tree<T>::clear(Item*& root)
 {
-	if (root) {
-		if (root->left) {
-			clear(root->left);
-		}
-		if (root->right) {
-			clear(root->right);
-		}
-		root = nullptr;
-		size--;
+	if (root->left) {
+		clear(root->left);
 	}
+	if (root->right) {
+		clear(root->right);
+	}
+	root = nullptr;
+	size--;
 }
 
 template<typename T>
@@ -126,91 +178,80 @@ inline bool Tree<T>::isEmpty()
 }
 
 template<typename T>
-inline T Tree<T>::read(INT_64 key, Item*& root)
+inline T Tree<T>::read(int key, Item*& root)
 {
-	viewedItems = 1;
-	if (root) {
-		viewedItems++;
-		if (key == root->key) {
-			return root->data;
-		}
-		else if (key < root->key) {
-			read(key, root->left);
-		}
-		else if (key > root->key) {
-			read(key, root->right);
-		}
+	if (root = this->root) {
+		elemViewed = 1;
 	}
+	if (key == root->key) {
+		return root->data;
+	}
+	else if (key < root->key) {
+		read(key, root->left);
+	}
+	else if (key > root->key) {
+		read(key, root->right);
+	}
+	elemViewed++;
 }
 
 template<typename T>
-inline void Tree<T>::edit(INT_64 key, T newData, Item*& root)
+inline void Tree<T>::edit(int key, T newData, Item*& root)
 {
-	viewedItems = 1;
-	if (root) {
-		viewedItems++;
-		if (key == root->key) {
-			root->data = newData;
-		}
-		else if (key < root->key) {
-			edit(key, newData, root->left);
-		}
-		else if (key > root->key) {
-			edit(key, newData, root->right);
-		}
+	if (root = this->root) {
+		elemViewed = 1;
 	}
+	if (key == root->key) {
+		root->data = newData;
+	}
+	else if (key < root->key) {
+		edit(key, newData, root->left);
+	}	
+	else if (key > root->key) {
+		edit(key, newData, root->right);
+	}
+	elemViewed++;
 }
 
 template<typename T>
-inline void Tree<T>::add(INT_64 key, T data, Item*& root, Item*& parent)
+inline void Tree<T>::add(int key, T data, Item*& root, Item*& parent)
 {
-	if (root) {
-		viewedItems++;
-		if (key < root->key) {
-			add(key, data, root->left, root);
+	if (!root) {
+		root = new Item(key, data);
+		if (root != parent) {
+			root->parent = parent;
 		}
-		else if (key > root->key) {
-			add(key, data, root->right, root);
-		}
+		size++;
 	}
-	root = new Item(key, data);
-	if (getSize()) {
-		root->parent = parent;
+	if (root = this->root) {
+		elemViewed = 1;
 	}
-	size++;
+	else if (key == root->key) {
+		std::cout << "Данный ключ уже существует в дереве\n";
+	}
+	else if (key < root->key) {
+		add(key, data, root->left, root);
+	}	
+	else if (key > root->key) {
+		add(key, data, root->right, root);
+	}
+	elemViewed++;
 }
 
 template<typename T>
-inline void Tree<T>::deleteItem(INT_64 key, Item*& root)
+inline void Tree<T>::deleteItem(int key, Item*& root)
 {
-	// Остаётся ли ключ в дереве?
-	viewedItems = 1;
-	if (root) {
-		viewedItems++;
-		if (key < root->key) {
-			deleteItem(key, root->left);
-		}
-		else if (key > root->key) {
-			deleteItem(key, root->right);
-		}
-		else if (key == root->key && !root->left && !root->right) {
-			root = nullptr;
-			size--;
-		}
-		else if (key == root->key && !root->left) {
-			root = root->right;
-			root->right = nullptr;
-		}
-		else if (key == root->key && !root->right) {
-			root = root->left;
-			root->left = nullptr;
-		}
-		else if (key == root->key) {
-			root->key = root->left->key;
-			root->data = root->left->data;
-			root->left = nullptr;
-		}
+	if (key < root->key) {
+		deleteItem(key, root->left);
 	}
+	else if (key > root->key) {
+		deleteItem(key, root->right);
+	}
+	if (key == root->key) {
+
+		size--;
+	}
+	elemViewed++;
 }
 
 // Рекурсивный вывод
@@ -345,26 +386,9 @@ inline int Tree<T>::getDepth(Item*& target)
 }
 
 template<typename T>
-inline bool Tree<T>::isContain(INT_64 key, Item*& root)
+inline int Tree<T>::getElemViewed()
 {
-	while (root) {
-		if (key == root->key) {
-			return true;
-		}
-		else if (key < root->key) {
-			root = root->left;
-		}
-		else if (key > root->key) {
-			root = root->right;
-		}
-	}
-	return false;
-}
-
-template<typename T>
-inline int Tree<T>::getViewedItems()
-{
-	return viewedItems;
+	return elemViewed;
 }
 
 template<typename T>
@@ -376,47 +400,6 @@ inline void Tree<T>::print_Lt_Rt_t(Item*& root)
 	print_Lt_Rt_t(root->left);
 	print_Lt_Rt_t(root->right);
 	std::cout << root->key << " ";
-}
-
-template<typename T>
-inline Tree<T>::Iterator Tree<T>::begin()
-{
-	Iterator it;
-	it.obj = root;
-	return it;
-}
-
-template<typename T>
-inline Tree<T>::Iterator Tree<T>::end()
-{
-	// Итеративный алгоритм с методички
-	Iterator it;
-	it.obj = nullptr;
-	std::stack<Item*> stack;
-	stack.push(root);
-	while (!stack.empty()) {
-		Item* current = stack.top();
-		it.obj = current;
-		stack.pop();
-		if (current->right) {
-			stack.push(current->right);
-		}
-		if (current->left) {
-			stack.push(current->left);
-		}
-	}
-	return it;
-}
-
-template<typename T>
-inline Tree<T>::Item* Tree<T>::lt_Rt_t(Item*& root)
-{
-	if (!root) {
-		return nullptr;
-	}
-	lt_Rt_t(root->left);
-	lt_Rt_t(root->right);
-	return root;
 }
 
 template<typename T>
@@ -515,36 +498,6 @@ inline bool Tree<T>::Iterator::operator!=(const Iterator& it)
 	else {
 		return false;
 	}
-}
-
-template<typename T>
-inline Tree<T>::ReverseIterator Tree<T>::rBegin()
-{
-	// Итеративный алгоритм с методички
-	ReverseIterator it;
-	it.obj = nullptr;
-	std::stack<Item*> stack;
-	stack.push(root);
-	while (!stack.empty()) {
-		Item* current = stack.top();
-		it.obj = current;
-		stack.pop();
-		if (current->right) {
-			stack.push(current->right);
-		}
-		if (current->left) {
-			stack.push(current->left);
-		}
-	}
-	return it;
-}
-
-template<typename T>
-inline Tree<T>::ReverseIterator Tree<T>::rEnd()
-{
-	ReverseIterator it;
-	it.obj = root;
-	return it;
 }
 
 template<typename T>
