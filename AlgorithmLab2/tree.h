@@ -4,40 +4,45 @@
 #include <stack>
 #include <queue>
 
+typedef unsigned long long INT_64;
+
 template <typename T>
 class Tree
 {
 	struct Item 
 	{
-		int key;
+		INT_64 key;
 		T data;
 		Item* right;
 		Item* left;
 		Item* parent;
 		int consoleW;
-		Item(int key, T data, Item* right = nullptr, Item* left = nullptr, Item* parent = nullptr);
+		Item(INT_64 key, T data, Item* right = nullptr, Item* left = nullptr, Item* parent = nullptr);
 	};
 
 	void print_Lt_Rt_t(Item*& root);
 	Tree<T>::Item* lt_Rt_t(Item*& root);
 public:
+	int viewedItems = 0;
 	int size = 0;
 	Item* root = nullptr;
 
-	Tree();
-	~Tree();
-	int getSize();
-	void clear(Item*& root);
-	bool isEmpty();
-	T read(int key, Item*& root);
-	void edit(int key, T newData, Item*& root);
-	void add(int key, T data, Item*& root, Item*& parent);
-	void deleteItem(int key, Item*& root);
-	void printHorizontal(Item*& root, int indent = 0);
-	void printVertical(Item*& root);
+	Tree();															// Конструктор
+	~Tree();														// Деструктор
+	int getSize();													// Получение размера
+	void clear(Item*& root);										// Очистка
+	bool isEmpty();													// Проверка на пустоту
+	T read(INT_64 key, Item*& root);								// Чтение значения
+	void edit(INT_64 key, T newData, Item*& root);					// Изменение значения
+	void add(INT_64 key, T data, Item*& root, Item*& parent);		// Добавление значения
+	void deleteItem(INT_64 key, Item*& root);						// Удаление значения
+	void printHorizontal(Item*& root, int indent = 0);				// Вывод горизонтальный
+	void printVertical(Item*& root);								// Вывод вертикальный
 	void t_Lt_Rt(Item*& root);
-	int getTreeHeight(Item*& root);
-	int getDepth(Item*& target);
+	int getTreeHeight(Item*& root);									// Получение высоты дерева
+	int getDepth(Item*& target);									// Получение уровня элемента
+	bool isContain(INT_64 key, Item*& root);						// Содержит ли дерево значение
+	int getViewedItems();
 
 	class Iterator 
 	{
@@ -67,7 +72,7 @@ public:
 };
 
 template<typename T>
-inline Tree<T>::Item::Item(int key, T data, Item* right, Item* left, Item* parent)
+inline Tree<T>::Item::Item(INT_64 key, T data, Item* right, Item* left, Item* parent)
 {
 	this->key = key;
 	this->data = data;
@@ -97,14 +102,16 @@ inline int Tree<T>::getSize()
 template<typename T>
 inline void Tree<T>::clear(Item*& root)
 {
-	if (root->left) {
-		clear(root->left);
+	if (root) {
+		if (root->left) {
+			clear(root->left);
+		}
+		if (root->right) {
+			clear(root->right);
+		}
+		root = nullptr;
+		size--;
 	}
-	if (root->right) {
-		clear(root->right);
-	}
-	root = nullptr;
-	size--;
 }
 
 template<typename T>
@@ -119,79 +126,90 @@ inline bool Tree<T>::isEmpty()
 }
 
 template<typename T>
-inline T Tree<T>::read(int key, Item*& root)
+inline T Tree<T>::read(INT_64 key, Item*& root)
 {
-	if (key == root->key) {
-		return root->data;
-	}
-	else if (key < root->key) {
-		read(key, root->left);
-	}
-	else if (key > root->key) {
-		read(key, root->right);
-	}
-}
-
-template<typename T>
-inline void Tree<T>::edit(int key, T newData, Item*& root)
-{
-	if (key == root->key) {
-		root->data = newData;
-	}
-	else if (key < root->key) {
-		edit(key, newData, root->left);
-	}	
-	else if (key > root->key) {
-		edit(key, newData, root->right);
-	}	
-}
-
-template<typename T>
-inline void Tree<T>::add(int key, T data, Item*& root, Item*& parent)
-{
-	if (!root) {
-		root = new Item(key, data);
-		if (root != parent) {
-			root->parent = parent;
+	viewedItems = 1;
+	if (root) {
+		viewedItems++;
+		if (key == root->key) {
+			return root->data;
 		}
-		size++;
-	}
-	else if (key == root->key) {
-		std::cout << "Данный ключ уже существует в дереве\n";
-	}
-	else if (key < root->key) {
-		add(key, data, root->left, root);
-	}	
-	else if (key > root->key) {
-		add(key, data, root->right, root);
+		else if (key < root->key) {
+			read(key, root->left);
+		}
+		else if (key > root->key) {
+			read(key, root->right);
+		}
 	}
 }
 
 template<typename T>
-inline void Tree<T>::deleteItem(int key, Item*& root)
+inline void Tree<T>::edit(INT_64 key, T newData, Item*& root)
 {
-	if (key < root->key) {
-		deleteItem(key, root->left);
+	viewedItems = 1;
+	if (root) {
+		viewedItems++;
+		if (key == root->key) {
+			root->data = newData;
+		}
+		else if (key < root->key) {
+			edit(key, newData, root->left);
+		}
+		else if (key > root->key) {
+			edit(key, newData, root->right);
+		}
 	}
-	else if (key > root->key) {
-		deleteItem(key, root->right);
-	}	
-	else if (key == root->key && !root->left && !root->right) {
-		root = nullptr;
-		size--;
+}
+
+template<typename T>
+inline void Tree<T>::add(INT_64 key, T data, Item*& root, Item*& parent)
+{
+	if (root) {
+		viewedItems++;
+		if (key < root->key) {
+			add(key, data, root->left, root);
+		}
+		else if (key > root->key) {
+			add(key, data, root->right, root);
+		}
 	}
-	else if (key == root->key && !root->left) {
-		root = root->right;
-		root->right = nullptr;
+	root = new Item(key, data);
+	if (getSize()) {
+		root->parent = parent;
 	}
-	else if (key == root->key && !root->right) {
-		root = root->left;
-		root->left = nullptr;
-	}
-	else if (key == root->key) {
-		root->key = root->left->key;
-		root->data = root->left->data;
-		root->left = nullptr;
+	size++;
+}
+
+template<typename T>
+inline void Tree<T>::deleteItem(INT_64 key, Item*& root)
+{
+	// Остаётся ли ключ в дереве?
+	viewedItems = 1;
+	if (root) {
+		viewedItems++;
+		if (key < root->key) {
+			deleteItem(key, root->left);
+		}
+		else if (key > root->key) {
+			deleteItem(key, root->right);
+		}
+		else if (key == root->key && !root->left && !root->right) {
+			root = nullptr;
+			size--;
+		}
+		else if (key == root->key && !root->left) {
+			root = root->right;
+			root->right = nullptr;
+		}
+		else if (key == root->key && !root->right) {
+			root = root->left;
+			root->left = nullptr;
+		}
+		else if (key == root->key) {
+			root->key = root->left->key;
+			root->data = root->left->data;
+			root->left = nullptr;
+		}
 	}
 }
 
@@ -324,6 +342,29 @@ inline int Tree<T>::getDepth(Item*& target)
 		depth++;
 	}
 	return depth;
+}
+
+template<typename T>
+inline bool Tree<T>::isContain(INT_64 key, Item*& root)
+{
+	while (root) {
+		if (key == root->key) {
+			return true;
+		}
+		else if (key < root->key) {
+			root = root->left;
+		}
+		else if (key > root->key) {
+			root = root->right;
+		}
+	}
+	return false;
+}
+
+template<typename T>
+inline int Tree<T>::getViewedItems()
+{
+	return viewedItems;
 }
 
 template<typename T>
