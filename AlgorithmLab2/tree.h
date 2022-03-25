@@ -17,7 +17,7 @@ class Tree
 		Item* left;
 		Item* parent;
 		int consoleW;
-		Item(INT_64 key, T data, Item* right = nullptr, Item* left = nullptr, Item* parent = nullptr);
+		Item(INT_64 key, T data = nullptr, Item* right = nullptr, Item* left = nullptr, Item* parent = nullptr);
 	};
 
 	void print_Lt_Rt_t(Item*& root);
@@ -128,7 +128,6 @@ inline bool Tree<T>::isEmpty()
 template<typename T>
 inline T Tree<T>::read(INT_64 key, Item*& root)
 {
-	viewedItems = 1;
 	if (root) {
 		viewedItems++;
 		if (key == root->key) {
@@ -146,7 +145,6 @@ inline T Tree<T>::read(INT_64 key, Item*& root)
 template<typename T>
 inline void Tree<T>::edit(INT_64 key, T newData, Item*& root)
 {
-	viewedItems = 1;
 	if (root) {
 		viewedItems++;
 		if (key == root->key) {
@@ -173,42 +171,29 @@ inline void Tree<T>::add(INT_64 key, T data, Item*& root, Item*& parent)
 			add(key, data, root->right, root);
 		}
 	}
-	root = new Item(key, data);
-	if (getSize()) {
-		root->parent = parent;
+	else {
+		root = new Item(key, data);
+		if (getSize() > 0) {
+			root->parent = parent;
+		}
+		size++;
 	}
-	size++;
 }
 
 template<typename T>
 inline void Tree<T>::deleteItem(INT_64 key, Item*& root)
 {
-	// Остаётся ли ключ в дереве?
-	viewedItems = 1;
 	if (root) {
 		viewedItems++;
-		if (key < root->key) {
+		if (key == root->key) {
+			root->data = 0;
+			size--;
+		}
+		else if (key < root->key) {
 			deleteItem(key, root->left);
 		}
 		else if (key > root->key) {
 			deleteItem(key, root->right);
-		}
-		else if (key == root->key && !root->left && !root->right) {
-			root = nullptr;
-			size--;
-		}
-		else if (key == root->key && !root->left) {
-			root = root->right;
-			root->right = nullptr;
-		}
-		else if (key == root->key && !root->right) {
-			root = root->left;
-			root->left = nullptr;
-		}
-		else if (key == root->key) {
-			root->key = root->left->key;
-			root->data = root->left->data;
-			root->left = nullptr;
 		}
 	}
 }
