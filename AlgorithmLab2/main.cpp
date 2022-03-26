@@ -31,8 +31,7 @@ INT_64 LineRand()
 	INT_64 y1, y2;
 	y1 = (aRand * RRand + cRand) % mRand;
 	y2 = (aRand * y1 + cRand) % mRand;
-	RRand = y1 & 0xFFFFFFFF00000000LL ^ (y2 &
-		0xFFFFFFFF00000000LL) >> 32;
+	RRand = y1 & 0xFFFFFFFF00000000LL ^ (y2 & 0xFFFFFFFF00000000LL) >> 32;
 	return RRand;
 }
 
@@ -203,14 +202,14 @@ int main() {
 	bool exit = false;
 
 	// Для отладки
-	//tree.add(25, "String1", tree.root, tree.root);
-	//tree.add(13, "String2", tree.root, tree.root);
-	//tree.add(100, "String3", tree.root, tree.root);
-	//tree.add(15, "String4", tree.root, tree.root);
-	//tree.add(2, "String5", tree.root, tree.root);
-	//tree.add(63, "String6", tree.root, tree.root);
-	//tree.add(8, "String7", tree.root, tree.root);
-	//tree.add(42, "String8", tree.root, tree.root);
+	//tree.add(25, 1, tree.root, tree.root);
+	//tree.add(13, 1, tree.root, tree.root);
+	//tree.add(100, 1, tree.root, tree.root);
+	//tree.add(15, 1, tree.root, tree.root);
+	//tree.add(2, 1, tree.root, tree.root);
+	//tree.add(63, 1, tree.root, tree.root);
+	//tree.add(8, 1, tree.root, tree.root);
+	//tree.add(42, 1, tree.root, tree.root);
 
 	std::exception exception("Исключение");
 

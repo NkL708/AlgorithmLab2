@@ -172,9 +172,12 @@ inline void Tree<T>::add(INT_64 key, T data, Item*& root, Item*& parent)
 		}
 	}
 	else {
-		root = new Item(key, data);
 		if (getSize() > 0) {
-			root->parent = parent;
+			root = new Item(key, data, nullptr, nullptr, parent);
+		}
+		// Первый элемент
+		else {
+			this->root = new Item(key, data);
 		}
 		size++;
 	}
@@ -332,15 +335,15 @@ inline int Tree<T>::getDepth(Item*& target)
 template<typename T>
 inline bool Tree<T>::isContain(INT_64 key, Item*& root)
 {
-	while (root) {
+	if (root) {
 		if (key == root->key) {
 			return true;
 		}
 		else if (key < root->key) {
-			root = root->left;
+			isContain(key, root->left);
 		}
 		else if (key > root->key) {
-			root = root->right;
+			isContain(key, root->right);
 		}
 	}
 	return false;
