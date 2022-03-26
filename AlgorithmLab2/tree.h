@@ -34,8 +34,8 @@ public:
 	void edit(Key key, Data newData, Item*& root);					// Изменение значения
 	void add(Key key, Data data, Item*& root, Item*& parent);		// Добавление значения
 	void deleteItem(Key key, Item*& root);							// Удаление значения
-	void printHorizontal(Item*& root, int indent = 0);				// Вывод горизонтальный
-	void printVertical(Item*& root);								// Вывод вертикальный
+	void printTreeHorizontal(Item*& root, int indent = 0);				// Вывод горизонтальный
+	void printTree(Item*& root);								// Вывод вертикальный
 	void t_Lt_Rt(Item*& root);
 	int getTreeHeight(Item*& root);									// Получение высоты дерева
 	int getDepth(Item*& target);									// Получение уровня элемента
@@ -219,13 +219,13 @@ inline void Tree<Data, Key>::deleteItem(Key key, Item*& root)
 
 // Рекурсивный вывод
 template<typename Data, typename Key>
-inline void Tree<Data, Key>::printHorizontal(Item*& root, int indent)
+inline void Tree<Data, Key>::printTreeHorizontal(Item*& root, int indent)
 {
 	if (root) 
 	{
 		if (root->right) 
 		{
-			printHorizontal(root->right, indent + 4);
+			printTreeHorizontal(root->right, indent + 4);
 		}
 		if (indent) 
 		{
@@ -239,7 +239,7 @@ inline void Tree<Data, Key>::printHorizontal(Item*& root, int indent)
 		if (root->left) 
 		{
 			std::cout << std::setw(indent) << ' ' << " \\\n";
-			printHorizontal(root->left, indent + 4);
+			printTreeHorizontal(root->left, indent + 4);
 		}
 	}
 	else 
@@ -250,7 +250,7 @@ inline void Tree<Data, Key>::printHorizontal(Item*& root, int indent)
 
 // Итеративный вывод
 template<typename Data, typename Key>
-inline void Tree<Data, Key>::printVertical(Item*& root)
+inline void Tree<Data, Key>::printTree(Item*& root)
 {
 	if (root) 
 	{
@@ -371,8 +371,8 @@ inline int Tree<Data, Key>::getDepth(Item*& target)
 	return depth;
 }
 
-template<typename T>
-inline bool Tree<T>::isContain(INT_64 key, Item*& root)
+template<typename Data, typename Key>
+inline bool Tree<Data, Key>::isContain(Key key, Item*& root)
 {
 	if (root) 
 	{

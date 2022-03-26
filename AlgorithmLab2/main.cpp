@@ -355,7 +355,7 @@ int main()
 				}
 				break;
 			case 8:
-				tree.printHorizontal(tree.root);
+				tree.printTreeHorizontal(tree.root);
 				break;
 			// Iterator
 			case 9:
@@ -481,7 +481,7 @@ int main()
 						tree.getTreeHeight(tree.root);
 						break;
 					case 3:
-						tree.printVertical(tree.root);
+						tree.printTree(tree.root);
 						break;
 					case 4:
 						std::cout << "¬ведите размер ";
