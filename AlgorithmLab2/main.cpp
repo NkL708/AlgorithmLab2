@@ -1,13 +1,9 @@
 #include <iostream>
 #include "tree.h"
 
-#define TYPE int
-
-using namespace std;
 typedef unsigned long long INT_64;
 
 //переменная и константы генератора LineRand()
-
 static INT_64 RRand = 15750;
 const INT_64 mRand = (1 << 63) - 1;
 const INT_64 aRand = 6364136223846793005;
@@ -15,7 +11,6 @@ const INT_64 cRand = 1442695040888963407;
 
 //функция установки первого случайного числа от часов
 //компьютера
-
 void sRand()
 {
 	srand(time(0));
@@ -25,7 +20,6 @@ void sRand()
 //функция генерации случайного числа
 //линейный конгруэнтный генератор Xi+1=(a*Xi+c)%m
 //habr.com/ru/post/208178
-
 INT_64 LineRand()
 {
 	INT_64 y1, y2;
@@ -39,7 +33,7 @@ INT_64 LineRand()
 void test_rand(int n)
 {
 	//создание дерева для 64 – разрядных ключей типа INT_64
-	Tree<TYPE> tree;
+	Tree<int, INT_64> tree;
 	//массив для ключей, которые присутствуют в дереве
 	INT_64* m = new INT_64[n];
 	//установка первого случайного числа
@@ -53,7 +47,7 @@ void test_rand(int n)
 		tree.add(m[i], 1, tree.root, tree.root);
 	}
 	//вывод размера дерева до теста
-	cout << "items count:" << tree.getSize() << endl;
+	std::cout << "items count:" << tree.getSize() << std::endl;
 	//обнуление счётчиков трудоёмкости вставки,
 	//удаления и поиска
 	double I = 0;
@@ -69,13 +63,17 @@ void test_rand(int n)
 			tree.viewedItems = 1;
 			tree.add(m[rand() % n], 1, tree.root, tree.root);
 			I += tree.getViewedItems();
-			try {
+			try 
+			{
 				tree.viewedItems = 1;
 				tree.read(LineRand(), tree.root);
 				S += tree.getViewedItems();
 			}
 			//обработка исключения при ошибке операции поиска
-			catch (int) { S += tree.getViewedItems(); }
+			catch (int) 
+			{ 
+				S += tree.getViewedItems(); 
+			}
 		}
 		else //90% успешных операций
 		{
@@ -88,25 +86,29 @@ void test_rand(int n)
 			tree.add(key, 1, tree.root, tree.root);
 			I += tree.getViewedItems();
 			m[ind] = key;
-			try {
+			try
+			{
 				tree.viewedItems = 1;
 				tree.read(m[rand() % n], tree.root);
 				S += tree.getViewedItems();
 			}
 			//обработка исключения при ошибке операции поиска
-			catch (int) { S += tree.getViewedItems(); }
+			catch (int) 
+			{ 
+				S += tree.getViewedItems(); 
+			}
 		} //конец теста
 	   //вывод результатов:
 	   //вывод размера дерева после теста
-	cout << "items count:" << tree.getSize() << endl;
+	std::cout << "items count:" << tree.getSize() << std::endl;
 	//теоретической оценки трудоёмкости операций BST
-	cout << "1.39*log2(n)=" << 1.39 * (log((double)n) / log(2.0)) << endl;
+	std::cout << "1.39*log2(n)=" << 1.39 * (log((double)n) / log(2.0)) << std::endl;
 	//экспериментальной оценки трудоёмкости вставки
-	cout << "Count insert: " << I / (n / 2) << endl;
+	std::cout << "Count insert: " << I / (n / 2) << std::endl;
 	//экспериментальной оценки трудоёмкости удаления
-	cout << "Count delete: " << D / (n / 2) << endl;
+	std::cout << "Count delete: " << D / (n / 2) << std::endl;
 	//экспериментальной оценки трудоёмкости поиска
-	cout << "Count search: " << S / (n / 2) << endl;
+	std::cout << "Count search: " << S / (n / 2) << std::endl;
 	//освобождение памяти массива m[]
 	delete[] m;
 }
@@ -114,19 +116,20 @@ void test_rand(int n)
 void test_ord(int n)
 {
 	//создание дерева для 64 – разрядных ключей типа INT_64
-	Tree<TYPE> tree;
+	Tree<int, INT_64> tree;
 	//массив для ключей, которые присутствуют в дереве
 	INT_64* m = new INT_64[n];
 	//заполнение дерева и массива элементами
 	// с возрастающими чётными ключами
 	//на интервале [0, 10000, 20000, ... ,10000*n]
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) 
+	{
 		m[i] = i * 10000;
 		tree.viewedItems = 1;
 		tree.add(m[i], 1, tree.root, tree.root);
 	}
 	//вывод размера дерева до теста
-	cout << "items count:" << tree.getSize() << endl;
+	std::cout << "items count:" << tree.getSize() << std::endl;
 	//обнуление счётчиков трудоёмкости вставки,
 	// удаления и поиска
 	double I = 0;
@@ -149,13 +152,17 @@ void test_ord(int n)
 			I += tree.getViewedItems();
 			k = LineRand() % (10000 * n);
 			k = k + !(k % 2); // случайный нечётный ключ
-			try {
+			try 
+			{
 				tree.viewedItems = 1;
 				tree.read(k, tree.root);
 				S += tree.getViewedItems();
 			}
 			//обработка исключения при ошибке операции поиска
-			catch (int) { S += tree.getViewedItems(); }
+			catch (int) 
+			{ 
+				S += tree.getViewedItems(); 
+			}
 		}
 		else //90% успешных операций
 		{
@@ -169,38 +176,45 @@ void test_ord(int n)
 			tree.add(k, 1, tree.root, tree.root);
 			I += tree.getViewedItems();;
 			m[ind] = k;
-			try {
+			try 
+			{
 				tree.viewedItems = 1;
 				tree.read(m[rand() % n], tree.root);
 				S += tree.getViewedItems();;
 			}
 			//обработка исключения при ошибке операции поиска
-			catch (int) { S += tree.getViewedItems(); }
+			catch (int) 
+			{ 
+				S += tree.getViewedItems(); 
+			}
 		}
 	}
 	//вывод результатов:
 	// вывод размера дерева после теста
-	cout << "items count:" << tree.getSize() << endl;
+	std::cout << "items count:" << tree.getSize() << std::endl;
 	//теоретической оценки трудоёмкости операций BST
-	cout << "n/2 =" << n / 2 << endl;
+	std::cout << "n/2 =" << n / 2 << std::endl;
 	//экспериментальной оценки трудоёмкости вставки
-	cout << "Count insert: " << I / (n / 2) << endl;
+	std::cout << "Count insert: " << I / (n / 2) << std::endl;
 	//экспериментальной оценки трудоёмкости удаления
-	cout << "Count delete: " << D / (n / 2) << endl;
+	std::cout << "Count delete: " << D / (n / 2) << std::endl;
 	//экспериментальной оценки трудоёмкости поиска
-	cout << "Count search: " << S / (n / 2) << endl;
+	std::cout << "Count search: " << S / (n / 2) << std::endl;
 	//освобождение памяти массива m[]
 	delete[] m;
 } //конец теста
 
-int main() {
+int main() 
+{
 	setlocale(LC_ALL, "Russian");
-	Tree<TYPE> tree;
-	Tree<TYPE>::Iterator iterator;
-	Tree<TYPE>::ReverseIterator reverseIterator;
-	TYPE value;
-	int sw = 0, key;
+	Tree<int, INT_64> tree;
+	Tree<int, INT_64>::Iterator iterator;
+	Tree<int, INT_64>::ReverseIterator reverseIterator;
+	int value;
+	INT_64 key;
+	int sw = 0;
 	bool exit = false;
+	std::exception exception("Исключение");
 
 	// Для отладки
 	//tree.add(25, "String1", tree.root, tree.root);
@@ -212,48 +226,74 @@ int main() {
 	//tree.add(8, "String7", tree.root, tree.root);
 	//tree.add(42, "String8", tree.root, tree.root);
 
-	std::exception exception("Исключение");
+	std::string firstMenu[] = 
+	{
+		"\n\t1.  Получить размер дерева\n" ,
+		"\t2.  Очистить дерево\n" , 
+		"\t3.  Проверить дерево на пустоту\n" ,
+		"\t4.  Прочитать значение\n" ,
+		"\t5.  Изменить значение\n" ,
+		"\t6.  Добавить значение\n" ,
+		"\t7.  Удалить значение\n" ,
+		"\t8.  Вывести дерево в консоль\n" ,
+		"\t9.  Операции с итератором\n" ,
+		"\t10. Операции с обратным итератором\n" ,
+		"\t11. Дополнительные операции\n" ,
+		"\t0. Выход из программы\n" ,
+		"\nВведите номер операции: " 
+	};
+	std::string iteratorMenu[]
+	{
+		"\n\t1.  Присвоить begin() итератору\n" ,
+		"\t2.  Присвоить end() итератору\n" ,
+		"\t3.  Вывести значение итератора\n" ,
+		"\t4.  Изменить значение итератора\n" ,
+		"\t5.  Выполнить iterator++\n" ,
+		"\t6.  Выполнить iterator--\n" ,
+		"\t7.  Проверить, равен ли итератор begin()\n" ,
+		"\t8.  Проверить, равен ли итератор end()\n" ,
+		"\t9.  Проверить, не равен ли итератор begin()\n" ,
+		"\t10. Проверить, не равен ли итератор end()\n" ,
+		"\t0. Вернуться назад\n" ,
+		"\nВведите номер операции: "
+	};
+	std::string reverseIteratorMenu[] 
+	{
+		"\n\t1. Присвоить rbegin() обратному итератору\n" ,
+		"\t2. Присвоить rend() обратному итератору\n" ,
+		"\t3. Вывести значение обратного итератора\n" ,
+		"\t4. Изменить значение обратного итератора\n" ,
+		"\t5. Выполнить reverseIterator++\n" ,
+		"\t6. Выполнить reverseIterator--\n" ,
+		"\t7. Проверить, равен ли обратный итератор rbegin()\n" ,
+		"\t8. Проверить, равен ли итератор rend()\n" ,
+		"\t9. Проверить, не равен ли обртаный итератор rbegin()\n" ,
+		"\t10. Проверить, не равен ли обртаный итератор rend()\n" ,
+		"\t0. Вернуться назад\n" ,
+		"\nВведите номер операции: "
+	};
+	std::string extraMenu[]
+	{
+		"\n\t1. Вывести ключи методом t_Lt_Rt\n" ,
+		"\t2. Вычисление высоты дерева\n" ,
+		"\t3. Вывести дерево в консоль вертикально\n" ,
+		"\t4. Тест трудоёмкости случайного дерева\n" ,
+		"\t5. Тест трудоёмкости вырожденного дерева\n" ,
+		"\t0. Вернуться назад\n" ,
+		"\nВведите номер операции: "
+	};
 
-	while (!exit) {
-		std::cout << "\n\tСПИСОК ОПЕРАЦИЙ\n";
-		std::cout << "\t1. Получить размер дерева\n";
-		std::cout << "\t2. Очистить дерево\n";
-		std::cout << "\t3. Проверить дерево на пустоту\n";
-		std::cout << "\t4. Чтение значения по ключу\n";
-		std::cout << "\t5. Изменить значение по ключу\n";
-		std::cout << "\t6. Добавить значение по ключу\n";
-		std::cout << "\t7. Удалить значение по ключу\n";
-		std::cout << "\t8. Вывести дерево в консоль (Горизонтально)\n";
-		std::cout << "\t9. Вывести дерево в консоль (Вертикально)\n";
-		std::cout << "\t10. Вывести ключи методом t_Lt_Rt\n";
-		std::cout << "\t11. Присвоить begin() итератору\n";
-		std::cout << "\t12. Присвоить end() итератору\n";
-		std::cout << "\t13. Вывести значение итератора\n";
-		std::cout << "\t14. Изменить значение итератора\n";
-		std::cout << "\t15. Выполнить iterator++\n";
-		std::cout << "\t16. Выполнить iterator--\n";
-		std::cout << "\t17. Проверить, равен ли итератор begin()\n";
-		std::cout << "\t18. Проверить, равен ли итератор end()\n";
-		std::cout << "\t19. Проверить, не равен ли итератор begin()\n";
-		std::cout << "\t20. Проверить, не равен ли итератор end()\n";
-		std::cout << "\t21. Присвоить rbegin() обратному итератору\n";
-		std::cout << "\t22. Присвоить rend() обратному итератору\n";
-		std::cout << "\t23. Вывести значение обратного итератора\n";
-		std::cout << "\t24. Изменить значение обратного итератора\n";
-		std::cout << "\t25. Выполнить reverseIterator++\n";
-		std::cout << "\t26. Выполнить reverseIterator--\n";
-		std::cout << "\t27. Проверить, равен ли обратный итератор rbegin()\n";
-		std::cout << "\t28. Проверить, равен ли итератор rend()\n";
-		std::cout << "\t29. Проверить, не равен ли обртаный итератор rbegin()\n";
-		std::cout << "\t30. Проверить, не равен ли обртаный итератор rend()\n";
-		std::cout << "\t31. Вычисление высоты дерева\n";
-		std::cout << "\t32. Тест трудоёмкости случайного дерева\n";
-		std::cout << "\t33. Тест трудоёмкости вырожденного дерева\n";
-		std::cout << "\t34. Выход из программы\n\n";
-		std::cout << "Введите номер операции: \n";
+	while (!exit) 
+	{
+		for (int i = 0; i < sizeof(firstMenu) / sizeof(std::string); i++)
+		{
+			std::cout << firstMenu[i];
+		}
 		std::cin >> sw;
-		try {
-			switch (sw) {
+		try
+		{
+			switch (sw) 
+			{
 			case 1:
 				std::cout << tree.getSize();
 				break;
@@ -266,10 +306,12 @@ int main() {
 			case 4:
 				std::cout << "Введите ключ ";
 				std::cin >> key;
-				if (tree.isContain(key, tree.root)) {
+				if (tree.isContain(key, tree.root)) 
+				{
 					std::cout << tree.read(key, tree.root) << std::endl;
 				}
-				else {
+				else 
+				{
 					throw exception;
 				}
 				break;
@@ -278,10 +320,12 @@ int main() {
 				std::cin >> key;
 				std::cout << "Введите новое значение ";
 				std::cin >> value;
-				if (tree.isContain(key, tree.root)) {
+				if (tree.isContain(key, tree.root)) 
+				{
 					tree.edit(key, value, tree.root);
 				}
-				else {
+				else 
+				{
 					throw exception;
 				}
 				break;
@@ -290,110 +334,177 @@ int main() {
 				std::cin >> key;
 				std::cout << "Введите новое значение ";
 				std::cin >> value;
-				if (!tree.isContain(key, tree.root)) {
+				if (!tree.isContain(key, tree.root)) 
+				{
 					tree.add(key, value, tree.root, tree.root);
 				}
-				else {
+				else 
+				{
 					throw exception;
 				}
 				break;
 			case 7:
 				std::cout << "Введите ключ ";
 				std::cin >> key;
-				if (tree.isContain(key, tree.root)) {
+				if (tree.isContain(key, tree.root)) 
+				{
 					tree.deleteItem(key, tree.root);
 				}
-				else {
+				else 
+				{
 					throw exception;
 				}
 				break;
 			case 8:
 				tree.printHorizontal(tree.root);
 				break;
+			// Iterator
 			case 9:
-				tree.printVertical(tree.root);
+				while (!exit)
+				{
+					for (int i = 0; i < sizeof(iteratorMenu) / sizeof(std::string); i++)
+					{
+						std::cout << iteratorMenu[i];
+					}
+					std::cin >> sw;
+					switch (sw)
+					{
+					case 1:
+						iterator = tree.begin();
+						break;
+					case 2:
+						iterator = tree.end();
+						break;
+					case 3:
+						std::cout << *iterator;
+						break;
+					case 4:
+						std::cout << "Введите новое значение ";
+						std::cin >> value;
+						*iterator = value;
+						break;
+					case 5:
+						iterator++;
+						break;
+					case 6:
+						iterator--;
+						break;
+					case 7:
+						std::cout << (iterator == tree.begin());
+						break;
+					case 8:
+						std::cout << (iterator == tree.end());
+						break;
+					case 9:
+						std::cout << (iterator != tree.begin());
+						break;
+					case 10:
+						std::cout << (iterator != tree.end());
+						break;
+					case 0:
+						exit = true;
+						break;
+					default:
+						std::cout << "Данного индекса не существует\n";
+						break;
+					}
+				}
+				exit = false;
 				break;
+			// ReverseIterator
 			case 10:
-				tree.t_Lt_Rt(tree.root);
+				while (!exit)
+				{
+					for (int i = 0; i < sizeof(reverseIteratorMenu) / sizeof(std::string); i++)
+					{
+						std::cout << reverseIteratorMenu[i];
+					}
+					std::cin >> sw;
+					switch (sw)
+					{
+					case 1:
+						reverseIterator = tree.rBegin();
+						break;
+					case 2:
+						reverseIterator = tree.rEnd();
+						break;
+					case 3:
+						std::cout << *reverseIterator;
+						break;
+					case 4:
+						std::cout << "Введите новое значение ";
+						std::cin >> value;
+						*reverseIterator = value;
+						break;
+					case 5:
+						reverseIterator++;
+						break;
+					case 6:
+						reverseIterator--;
+						break;
+					case 7:
+						std::cout << (reverseIterator == tree.rBegin());
+						break;
+					case 8:
+						std::cout << (reverseIterator == tree.rEnd());
+						break;
+					case 9:
+						std::cout << (reverseIterator != tree.rBegin());
+						break;
+					case 10:
+						std::cout << (reverseIterator != tree.rEnd());
+						break;
+					case 0:
+						exit = true;
+						break;
+					default:
+						std::cout << "Данного индекса не существует\n";
+						break;
+					}
+				}
+				exit = false;
 				break;
+			// Extra operations
 			case 11:
-				iterator = tree.begin();
+				while (!exit)
+				{
+					for (int i = 0; i < sizeof(extraMenu) / sizeof(std::string); i++)
+					{
+						std::cout << extraMenu[i];
+					}
+					std::cin >> sw;
+					switch (sw)
+					{
+					case 1:
+						tree.t_Lt_Rt(tree.root);
+						break;
+					case 2:
+						tree.getTreeHeight(tree.root);
+						break;
+					case 3:
+						tree.printVertical(tree.root);
+						break;
+					case 4:
+						std::cout << "Введите размер ";
+						std::cin >> value;
+						test_rand(value);
+						break;
+					case 5:
+						std::cout << "Введите размер ";
+						std::cin >> value;
+						test_ord(value);
+						break;
+					case 0:
+						exit = true;
+						break;
+					default:
+						std::cout << "Данного индекса не существует\n";
+						break;
+					}
+				}
+				exit = false;
 				break;
-			case 12:
-				iterator = tree.end();
-				break;
-			case 13:
-				std::cout << *iterator;
-				break;
-			case 14:
-				std::cout << "Введите новое значение ";
-				std::cin >> value;
-				*iterator = value;
-				break;
-			case 15:
-				iterator++;
-				break;
-			case 16:
-				iterator--;
-				break;
-			case 17:
-				std::cout << (iterator == tree.begin());
-				break;
-			case 18:
-				std::cout << (iterator == tree.end());
-				break;
-			case 19:
-				std::cout << (iterator != tree.begin());
-				break;
-			case 20:
-				std::cout << (iterator != tree.end());
-				break;
-			case 21:
-				reverseIterator = tree.rBegin();
-				break;
-			case 22:
-				reverseIterator = tree.rEnd();
-				break;
-			case 23:
-				std::cout << *reverseIterator;
-				break;
-			case 24:
-				std::cout << "Введите новое значение ";
-				std::cin >> value;
-				*reverseIterator = value;
-				break;
-			case 25:
-				reverseIterator++;
-				break;
-			case 26:
-				reverseIterator--;
-				break;
-			case 27:
-				std::cout << (reverseIterator == tree.rBegin());
-				break;
-			case 28:
-				std::cout << (reverseIterator == tree.rEnd());
-				break;
-			case 29:
-				std::cout << (reverseIterator != tree.rBegin());
-				break;
-			case 30:
-				std::cout << (reverseIterator != tree.rEnd());
-				break;
-			case 31:
-				std::cout << tree.getTreeHeight(tree.root);
-				break;
-			case 32:
-				std::cout << "Введите размер ";
-				std::cin >> key;
-				test_rand(key);
-				break;
-			case 33:
-				std::cout << "Введите размер ";
-				std::cin >> key;
-				test_ord(key);
-				break;
-			case 34:
+			case 0:
 				exit = true;
 				break;
 			default:
@@ -401,7 +512,8 @@ int main() {
 				break;
 			}
 		}
-		catch (const std::exception& exception) {
+		catch (const std::exception& exception) 
+		{
 			std::cout << exception.what();
 		}
 
