@@ -174,24 +174,22 @@ inline void Tree<Data, Key>::edit(Key key, Data newData, Item*& root)
 template<typename Data, typename Key>
 inline void Tree<Data, Key>::add(Key key, Data data, Item*& root, Item*& parent)
 {
-	if (root) 
-	{
+	if (root) {
 		viewedItems++;
-		if (key < root->key) 
-		{
+		if (key < root->key) {
 			add(key, data, root->left, root);
 		}
-		else if (key > root->key) 
-		{
+		else if (key > root->key) {
 			add(key, data, root->right, root);
 		}
 	}
-	else 
-	{
-		root = new Item(key, data);
-		if (getSize() > 0) 
-		{
-			root->parent = parent;
+	else {
+		if (getSize() > 0) {
+			root = new Item(key, data, nullptr, nullptr, parent);
+		}
+		// Первый элемент
+		else {
+			this->root = new Item(key, data);
 		}
 		size++;
 	}
@@ -373,10 +371,10 @@ inline int Tree<Data, Key>::getDepth(Item*& target)
 	return depth;
 }
 
-template<typename Data, typename Key>
-inline bool Tree<Data, Key>::isContain(Key key, Item*& root)
+template<typename T>
+inline bool Tree<T>::isContain(INT_64 key, Item*& root)
 {
-	while (root) 
+	if (root) 
 	{
 		if (key == root->key) 
 		{
@@ -384,11 +382,11 @@ inline bool Tree<Data, Key>::isContain(Key key, Item*& root)
 		}
 		else if (key < root->key) 
 		{
-			root = root->left;
+			isContain(key, root->left);
 		}
 		else if (key > root->key) 
 		{
-			root = root->right;
+			isContain(key, root->right);
 		}
 	}
 	return false;
