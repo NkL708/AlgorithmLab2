@@ -96,9 +96,9 @@ void test_rand(int n)
 			{ 
 				S += tree.getViewedNodes(); 
 			}
-		} //конец теста
-	   //вывод результатов:
-	   //вывод размера дерева после теста
+		} 
+	//вывод результатов:
+	//вывод размера дерева после теста
 	std::cout << "Nodes count:" << tree.getSize() << std::endl;
 	//теоретической оценки трудоёмкости операций BST
 	std::cout << "1.39*log2(n)=" << 1.39 * (log((double)n) / log(2.0)) << std::endl;
@@ -216,14 +216,14 @@ int main()
 	std::exception exception("Исключение");
 
 	// Для отладки
-	tree.add(25, 25, tree.root, tree.root);
-	tree.add(13, 13, tree.root, tree.root);
-	tree.add(100, 100, tree.root, tree.root);
-	tree.add(15, 15, tree.root, tree.root);
-	tree.add(2, 2, tree.root, tree.root);
-	tree.add(63, 63, tree.root, tree.root);
-	tree.add(8, 8, tree.root, tree.root);
-	tree.add(42, 42, tree.root, tree.root);
+	//tree.add(25, 25, tree.root, tree.root);
+	//tree.add(13, 13, tree.root, tree.root);
+	//tree.add(100, 100, tree.root, tree.root);
+	//tree.add(15, 15, tree.root, tree.root);
+	//tree.add(2, 2, tree.root, tree.root);
+	//tree.add(63, 63, tree.root, tree.root);
+	//tree.add(8, 8, tree.root, tree.root);
+	//tree.add(42, 42, tree.root, tree.root);
 
 	std::string firstMenu[] = 
 	{
