@@ -523,9 +523,9 @@ int main()
 				break;
 			}
 		}
-		catch (const std::exception& exception) 
+		catch (const std::exception& ex)
 		{
-			std::cout << exception.what();
+			std::cout << ex.what() << std::endl;
 		}
 
 	}

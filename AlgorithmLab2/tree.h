@@ -16,13 +16,17 @@ class Tree
 		Node* parent;
 		int consoleW;
 
-		Node(Key key, Data data = nullptr, Node* right = nullptr, Node* left = nullptr, Node* parent = nullptr, int consoleW = 0);
+		Node(Key key, Data data = nullptr, Node* right = nullptr,
+			Node* left = nullptr, Node* parent = nullptr, int consoleW = 0);
 	};
 
 	// Не пользовательские методы
-	Node* getMinNode(Node*& root);									// Поиск эл-а с минимальным ключом
-	Node* getMaxNode(Node*& root);									// Поиск эл-а с максимальным ключом
-	int getDepth(Node*& target);
+	Node* getMinNode(Node* root);									// Поиск эл-а с минимальным ключом
+	Node* getMaxNode(Node* root);									// Поиск эл-а с максимальным ключом
+	int getDepth(Node*& target);									// Глубина эл-а
+	void Lt_Rt_t(Node*& root);										// Схема обхода Lt_Rt_t
+	static void L_t_R(Node*& root, std::queue<Node*>& queue);		// Для прямого хода
+	static void L_t_R(Node*& root, std::stack<Node*>& stack);		// Для обратного хода
 	
 public:
 	int viewedNodes = 0;
@@ -41,6 +45,7 @@ public:
 	void deleteNode(Key key, Node*& root);							// Удаление элемента
 	// Дополнительные методы
 	int getTreeHeight(Node*& root);									// Получение высоты дерева
+	void t_Lt_Rt(Node*& root);										// Вывод последовательности ключей по схеме t_Lt_Rt
 	// Отладочные методы
 	bool isContain(Key key, Node*& root);							// Содержит ли дерево значение
 	int getViewedNodes();											// Получить кол-во просмотренных эл-ов последней операцией
@@ -48,11 +53,7 @@ public:
 	void printTreeH(Node*& root, int indent = 0);					// Горизонтальный вывод
 	void printTreeV(Node*& root);									// Вертикальный вывод
 
-	// Переделай Lt Rt t!
-	Tree<Data, Key>::Node* lt_Rt_t(Node*& root);
-	void print_Lt_Rt_t(Node*& root);
-	void t_Lt_Rt(Node*& root);
-
+	// Итераторы
 	class Iterator
 	{
 	public:
@@ -65,6 +66,7 @@ public:
 		bool operator ==(const Iterator& it);
 		bool operator !=(const Iterator& it);
 	};
+public:
 	Iterator begin();
 	Iterator end();
 
@@ -80,6 +82,7 @@ public:
 		bool operator ==(const ReverseIterator& it);
 		bool operator !=(const ReverseIterator& it);
 	};
+
 	ReverseIterator rBegin();
 	ReverseIterator rEnd();
 };
@@ -96,24 +99,24 @@ inline Tree<Data, Key>::Node::Node(Key key, Data data, Node* right, Node* left, 
 }
 
 template<typename Data, typename Key>
-inline Tree<Data, Key>::Node* Tree<Data, Key>::getMinNode(Node*& root)
+inline Tree<Data, Key>::Node* Tree<Data, Key>::getMinNode(Node* root)
 {
-	if (root)
+	while (root) 
 	{
 		if (root->left)
-			return getMinNode(root->left);
+			root = root->left;
 		else
 			return root;
 	}
 }
 
 template<typename Data, typename Key>
-inline Tree<Data, Key>::Node* Tree<Data, Key>::getMaxNode(Node*& root)
+inline Tree<Data, Key>::Node* Tree<Data, Key>::getMaxNode(Node* root)
 {
-	if (root)
+	while (root)
 	{
 		if (root->right)
-			return getMaxNode(root->right);
+			root = root->right;
 		else
 			return root;
 	}
@@ -338,11 +341,23 @@ inline void Tree<Data, Key>::printTreeV(Node*& root)
 template<typename Data, typename Key>
 inline void Tree<Data, Key>::t_Lt_Rt(Node*& root)
 {
-	if (!root) 
-		return;
-	std::cout << root->key << " ";
-	print_Lt_Rt_t(root->left);
-	print_Lt_Rt_t(root->right);
+	if (root) 
+	{
+		std::cout << root->key << " ";
+		Lt_Rt_t(root->left);
+		Lt_Rt_t(root->right);
+	}
+}
+
+template<typename Data, typename Key>
+inline void Tree<Data, Key>::Lt_Rt_t(Node*& root)
+{
+	if (root) 
+	{
+		Lt_Rt_t(root->left);
+		Lt_Rt_t(root->right);
+		std::cout << root->key << " ";
+	}
 }
 
 template<typename Data, typename Key>
@@ -403,13 +418,31 @@ inline void Tree<Data, Key>::resetViewed()
 }
 
 template<typename Data, typename Key>
-inline void Tree<Data, Key>::print_Lt_Rt_t(Node*& root)
+inline void Tree<Data, Key>::L_t_R(Node*& root, std::queue<Node*>& queue)
 {
-	if (!root) 
-		return;
-	print_Lt_Rt_t(root->left);
-	print_Lt_Rt_t(root->right);
-	std::cout << root->key << " ";
+	if (root) 
+	{
+		if (root->left)
+			L_t_R(root->left, queue);
+		// Если предыдущий элемент в рекурсии совпадает с итератором
+		queue.push(root);
+		if (root->right)
+			L_t_R(root->right, queue);
+	}
+}
+
+template<typename Data, typename Key>
+inline void Tree<Data, Key>::L_t_R(Node*& root, std::stack<Node*>& stack)
+{
+	if (root)
+	{
+		if (root->left)
+			L_t_R(root->left, stack);
+		// Если предыдущий элемент в рекурсии совпадает с итератором
+		stack.push(root);
+		if (root->right)
+			L_t_R(root->right, stack);
+	}
 }
 
 template<typename Data, typename Key>
@@ -422,18 +455,8 @@ inline Tree<Data, Key>::Iterator Tree<Data, Key>::begin()
 template<typename Data, typename Key>
 inline Tree<Data, Key>::Iterator Tree<Data, Key>::end()
 {
-	Iterator it(getMaxNode(root)->right);
+	Iterator it(getMaxNode(root));
 	return it;
-}
-
-template<typename Data, typename Key>
-inline Tree<Data, Key>::Node* Tree<Data, Key>::lt_Rt_t(Node*& root)
-{
-	if (!root) 
-		return nullptr;
-	lt_Rt_t(root->left);
-	lt_Rt_t(root->right);
-	return root;
 }
 
 template<typename Data, typename Key>
@@ -451,71 +474,62 @@ inline Data& Tree<Data, Key>::Iterator::operator*()
 template<typename Data, typename Key>
 inline void Tree<Data, Key>::Iterator::operator++(int)
 {
-	Iterator it = *this;
+	std::queue<Node*> queue;
+	Iterator root(this->obj);
 	// Возвращение к корню дерева
-	while (it.obj->parent) 
-		it.obj = it.obj->parent;
-	std::stack<Node*> stack;
-	// Помещаем корень в стек
-	stack.push(it.obj);
-	while (!stack.empty()) 
+	while (root.obj->parent)
+		root.obj = root.obj->parent;
+	L_t_R(root.obj, queue);
+	Node* current;
+	while (!queue.empty())
 	{
-		// Буфер текущего элемента важен
-		Node* current = stack.top();
-		// Достаём элемент, помещаем в стек его потомков
-		stack.pop();
-		if (current->right) 
-			stack.push(current->right);
-		if (current->left) 
-			stack.push(current->left);
-		// Если нашли итератор, отдаём следующему элементу в стеке
-		if (current == this->obj && stack.size()) 
+		current = queue.front();
+		queue.pop();
+
+		// Если вышли за предел дерева
+		if (queue.empty()) 
 		{
-			it.obj = stack.top();
-			break;
+			// Если вышли за предел дерева
+			throw std::exception("Исключение");
 		}
-		else if (!stack.size()) 
+		// Если элемент совпадает с итератором
+		// то следующий элемент итератора в коллекции
+		else if (current == this->obj) 
 		{
-			std::cout << "Исключение\n";
+			this->obj = queue.front();
 			return;
 		}
 	}
-	*this = it;
 }
 
 template<typename Data, typename Key>
 inline void Tree<Data, Key>::Iterator::operator--(int)
 {
-	Iterator it = *this;
-	if (it.obj->parent == nullptr) 
-	{
-		std::cout << "Исключение\n";
-		return;
-	}
-	// Возвращение к корню дерева
-	while (it.obj->parent) 
-		it.obj = it.obj->parent;
 	std::stack<Node*> stack;
-	// Помещаем корень в стек
-	stack.push(it.obj);
-	while (!stack.empty()) 
+	Iterator root(this->obj);
+	// Возвращение к корню дерева
+	while (root.obj->parent)
+		root.obj = root.obj->parent;
+	L_t_R(root.obj, stack);
+	Node* current;
+	while (!stack.empty())
 	{
-		// Буфер текущего элемента важен
-		Node* current = stack.top();
-		// Достаём элемент, помещаем в стек его потомков
+		current = stack.top();
 		stack.pop();
-		if (current->right) 
-			stack.push(current->right);
-		if (current->left) 
-			stack.push(current->left);
-		// Если нашли итератор, отдаём предыдущему (буфер) элементу в стеке
-		if (stack.top() == this->obj) 
+		// Если вышли за предел дерева
+		if (stack.empty())
 		{
-			it.obj = current;
-			break;
+			// Если вышли за предел дерева
+			throw std::exception("Исключение");
+		}
+		// Если элемент совпадает с итератором
+		// то следующий элемент итератора в коллекции
+		else if (current == this->obj)
+		{
+			this->obj = stack.top();
+			return;
 		}
 	}
-	*this = it;
 }
 
 template<typename Data, typename Key>
@@ -546,7 +560,7 @@ inline Tree<Data, Key>::ReverseIterator Tree<Data, Key>::rBegin()
 template<typename Data, typename Key>
 inline Tree<Data, Key>::ReverseIterator Tree<Data, Key>::rEnd()
 {
-	ReverseIterator it(getMinNode(root)->left);
+	ReverseIterator it(getMinNode(root));
 	return it;
 }
 
@@ -566,71 +580,62 @@ inline Data& Tree<Data, Key>::ReverseIterator::operator*()
 template<typename Data, typename Key>
 inline void Tree<Data, Key>::ReverseIterator::operator++(int)
 {
-	ReverseIterator it = *this;
-	if (it.obj->parent == nullptr) 
-	{
-		std::cout << "Исключение\n";
-		return;
-	}
-	// Возвращение к корню дерева
-	while (it.obj->parent) 
-		it.obj = it.obj->parent;
 	std::stack<Node*> stack;
-	// Помещаем корень в стек
-	stack.push(it.obj);
-	while (!stack.empty()) 
+	Iterator root(this->obj);
+	// Возвращение к корню дерева
+	while (root.obj->parent)
+		root.obj = root.obj->parent;
+	L_t_R(root.obj, stack);
+	Node* current;
+	while (!stack.empty())
 	{
-		// Буфер текущего элемента важен
-		Node* current = stack.top();
-		// Достаём элемент, помещаем в стек его потомков
+		current = stack.top();
 		stack.pop();
-		if (current->right) 
-			stack.push(current->right);
-		if (current->left) 
-			stack.push(current->left);
-		// Если нашли итератор, отдаём предыдущему (буфер) элементу в стеке
-		if (stack.top() == this->obj) 
+		// Если вышли за предел дерева
+		if (stack.empty())
 		{
-			it.obj = current;
-			break;
+			// Если вышли за предел дерева
+			throw std::exception("Исключение");
+		}
+		// Если элемент совпадает с итератором
+		// то следующий элемент итератора в коллекции
+		else if (current == this->obj)
+		{
+			this->obj = stack.top();
+			return;
 		}
 	}
-	*this = it;
 }
 
 template<typename Data, typename Key>
 inline void Tree<Data, Key>::ReverseIterator::operator--(int)
 {
-	ReverseIterator it = *this;
+	std::queue<Node*> queue;
+	Iterator root(this->obj);
 	// Возвращение к корню дерева
-	while (it.obj->parent) 
-		it.obj = it.obj->parent;
-	std::stack<Node*> stack;
-	// Помещаем корень в стек
-	stack.push(it.obj);
-	while (!stack.empty()) 
+	while (root.obj->parent)
+		root.obj = root.obj->parent;
+	L_t_R(root.obj, queue);
+	Node* current;
+	while (!queue.empty())
 	{
-		// Буфер текущего элемента важен
-		Node* current = stack.top();
-		// Достаём элемент, помещаем в стек его потомков
-		stack.pop();
-		if (current->right) 
-			stack.push(current->right);
-		if (current->left) 
-			stack.push(current->left);
-		// Если нашли итератор, отдаём следующему элементу в стеке
-		if (current == this->obj && stack.size()) 
+		current = queue.front();
+		queue.pop();
+
+		// Если вышли за предел дерева
+		if (queue.empty())
 		{
-			it.obj = stack.top();
-			break;
+			// Если вышли за предел дерева
+			throw std::exception("Исключение");
 		}
-		else if (!stack.size()) 
+		// Если элемент совпадает с итератором
+		// то следующий элемент итератора в коллекции
+		else if (current == this->obj)
 		{
-			std::cout << "Исключение\n";
+			this->obj = queue.front();
 			return;
 		}
 	}
-	*this = it;
 }
 
 template<typename Data, typename Key>
