@@ -23,7 +23,6 @@ class Tree
 	// Не пользовательские методы
 	Node* getMinNode(Node* root);									// Поиск эл-а с минимальным ключом
 	Node* getMaxNode(Node* root);									// Поиск эл-а с максимальным ключом
-	void Lt_Rt_t(Node*& root);										// Схема обхода Lt_Rt_t
 	void L_t_R(Node*& root, std::queue<Node*>& queue);				// Для прямого хода
 	void L_t_R(Node*& root, std::stack<Node*>& stack);				// Для обратного хода
 	
@@ -180,14 +179,14 @@ template<typename Data, typename Key>
 inline void Tree<Data, Key>::edit(Key key, Data newData, Node*& root)
 {
 	viewedNodes++;
+	if (!root)
+		throw std::exception("Исключение");
 	if (key < root->key) 
 		edit(key, newData, root->left);
 	else if (key > root->key)
 		edit(key, newData, root->right);
 	else if (key == root->key)
 		root->data = newData;
-	else
-		throw std::exception("Исключение");
 }
 
 template<typename Data, typename Key>
@@ -205,7 +204,7 @@ inline void Tree<Data, Key>::add(Key key, Data data, Node*& root, Node*& parent)
 		add(key, data, root->left, root);
 	else if (key > root->key)
 		add(key, data, root->right, root);
-	else
+	else if (key == root->key)
 		throw std::exception("Исключение");
 }
 
@@ -277,18 +276,8 @@ inline void Tree<Data, Key>::t_Lt_Rt(Node*& root)
 	if (!root)
 		return;
 	std::cout << root->key << " ";
-	Lt_Rt_t(root->left);
-	Lt_Rt_t(root->right);
-}
-
-template<typename Data, typename Key>
-inline void Tree<Data, Key>::Lt_Rt_t(Node*& root)
-{
-	if (!root)
-		return;
-	Lt_Rt_t(root->left);
-	Lt_Rt_t(root->right);
-	std::cout << root->key << " ";
+	t_Lt_Rt(root->left);
+	t_Lt_Rt(root->right);
 }
 
 template<typename Data, typename Key>

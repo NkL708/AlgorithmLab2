@@ -62,23 +62,23 @@ void test_rand(int n)
 			{
 				tree.resetViewed();
 				tree.deleteNode(LineRand(), tree.root);
-				D += tree.getViewedNodes();
 			}
-			catch (...) { D += tree.getViewedNodes(); }
+			catch (...) { }
+			D += tree.getViewedNodes();
 			try 
 			{
 				tree.resetViewed();
 				tree.add(m[rand() % n], 1, tree.root, tree.root);
-				I += tree.getViewedNodes();
 			}
-			catch (...) { I += tree.getViewedNodes(); }
+			catch (...) { }
+			I += tree.getViewedNodes();
 			try
 			{
 				tree.resetViewed();
 				tree.read(LineRand(), tree.root);
-				S += tree.getViewedNodes();
 			}
-			catch (...) { S += tree.getViewedNodes(); }
+			catch (...) { }
+			S += tree.getViewedNodes();
 		}
 		else //90% успешных операций
 		{
@@ -87,25 +87,27 @@ void test_rand(int n)
 			{
 				tree.resetViewed();
 				tree.deleteNode(m[ind], tree.root);
-				D += tree.getViewedNodes();
+				
 			}
-			catch (...) { D += tree.getViewedNodes(); }
+			catch (...) { }
+			D += tree.getViewedNodes();
 			INT_64 key = LineRand();
 			try
 			{
 				tree.resetViewed();
 				tree.add(key, 1, tree.root, tree.root);
-				I += tree.getViewedNodes();
+				
 			}
-			catch (...) { I += tree.getViewedNodes(); }
+			catch (...) { }
+			I += tree.getViewedNodes();
 			m[ind] = key;
 			try
 			{
 				tree.resetViewed();
 				tree.read(m[rand() % n], tree.root);
-				S += tree.getViewedNodes();
 			}
-			catch (...) { S += tree.getViewedNodes(); }
+			catch (...) { }
+			S += tree.getViewedNodes();
 		}
 	}
 	//конец теста
@@ -155,11 +157,20 @@ void test_ord(int n)
 		{
 			int k = LineRand() % (10000 * n);
 			k = k + !(k % 2); //случайный нечётный ключ
-			tree.resetViewed();
-			tree.deleteNode(k, tree.root);
+			try
+			{
+				tree.resetViewed();
+				tree.deleteNode(k, tree.root);	
+			}
+			catch (...) {  }
 			D += tree.getViewedNodes();
-			tree.resetViewed();
-			tree.add(m[rand() % n], 1, tree.root, tree.root);
+			try
+			{
+				tree.resetViewed();
+				tree.add(m[rand() % n], 1, tree.root, tree.root);
+				
+			}
+			catch (...) {  }
 			I += tree.getViewedNodes();
 			k = LineRand() % (10000 * n);
 			k = k + !(k % 2); // случайный нечётный ключ
@@ -167,37 +178,40 @@ void test_ord(int n)
 			{
 				tree.resetViewed();
 				tree.read(k, tree.root);
-				S += tree.getViewedNodes();
+				
 			}
 			//обработка исключения при ошибке операции поиска
-			catch (int) 
-			{ 
-				S += tree.getViewedNodes(); 
-			}
+			catch (...) { }
+			S += tree.getViewedNodes();
 		}
 		else //90% успешных операций
 		{
 			int ind = rand() % n;
-			tree.resetViewed();
-			tree.deleteNode(m[ind], tree.root);
+			try
+			{
+				tree.resetViewed();
+				tree.deleteNode(m[ind], tree.root);
+			}
+			catch (...) { }
 			D += tree.getViewedNodes();
 			int k = LineRand() % (10000 * n);
-			k = k + k % 2; // случайный чётный ключ
-			tree.resetViewed();
-			tree.add(k, 1, tree.root, tree.root);
+			try
+			{
+				k = k + k % 2; // случайный чётный ключ
+				tree.resetViewed();
+				tree.add(k, 1, tree.root, tree.root);
+			}
+			catch (...) { }
 			I += tree.getViewedNodes();
 			m[ind] = k;
 			try 
 			{
 				tree.resetViewed();
 				tree.read(m[rand() % n], tree.root);
-				S += tree.getViewedNodes();
 			}
 			//обработка исключения при ошибке операции поиска
-			catch (int) 
-			{ 
-				S += tree.getViewedNodes();
-			}
+			catch (...) { }
+			S += tree.getViewedNodes();
 		}
 	}
 	//вывод результатов:
@@ -226,17 +240,16 @@ int main()
 	INT_64 key;
 	int sw = 0;
 	bool exit = false;
-	std::exception exception("Исключение");
 
 	// Для отладки
-	//tree.add(25, 25, tree.root, tree.root);
-	//tree.add(13, 13, tree.root, tree.root);
-	//tree.add(100, 100, tree.root, tree.root);
-	//tree.add(15, 15, tree.root, tree.root);
-	//tree.add(2, 2, tree.root, tree.root);
-	//tree.add(63, 63, tree.root, tree.root);
-	//tree.add(8, 8, tree.root, tree.root);
-	//tree.add(42, 42, tree.root, tree.root);
+	tree.add(25, 25, tree.root, tree.root);
+	tree.add(13, 13, tree.root, tree.root);
+	tree.add(100, 100, tree.root, tree.root);
+	tree.add(15, 15, tree.root, tree.root);
+	tree.add(2, 2, tree.root, tree.root);
+	tree.add(63, 63, tree.root, tree.root);
+	tree.add(8, 8, tree.root, tree.root);
+	tree.add(42, 42, tree.root, tree.root);
 
 	std::string firstMenu[] = 
 	{
@@ -303,211 +316,273 @@ int main()
 			std::cout << firstMenu[i];
 		}
 		std::cin >> sw;
-		try
+		switch (sw) 
 		{
-			switch (sw) 
+		case 1:
+			std::cout << tree.getSize();
+			break;
+		case 2:
+			tree.clear(tree.root);
+			reverseIterator = nullptr;
+			iterator = nullptr;
+			break;
+		case 3:
+			std::cout << tree.isEmpty();
+			break;
+		case 4:
+			std::cout << "Введите ключ ";
+			std::cin >> key;
+			try 
 			{
-			case 1:
-				std::cout << tree.getSize();
-				break;
-			case 2:
-				tree.clear(tree.root);
-				reverseIterator = nullptr;
-				iterator = nullptr;
-				break;
-			case 3:
-				std::cout << tree.isEmpty();
-				break;
-			case 4:
-				std::cout << "Введите ключ ";
-				std::cin >> key;
 				tree.resetViewed();
 				std::cout << tree.read(key, tree.root) << std::endl;
-				break;
-			case 5:
-				std::cout << "Введите ключ ";
-				std::cin >> key;
-				std::cout << "Введите новое значение ";
-				std::cin >> value;
+			}
+			catch (std::exception ex) 
+			{
+				std::cout << ex.what() << std::endl; 
+			}
+			break;
+		case 5:
+			std::cout << "Введите ключ ";
+			std::cin >> key;
+			std::cout << "Введите новое значение ";
+			std::cin >> value;
+			try 
+			{
 				tree.resetViewed();
 				tree.edit(key, value, tree.root);
-				break;
-			case 6:
-				std::cout << "Введите ключ ";
-				std::cin >> key;
-				std::cout << "Введите новое значение ";
-				std::cin >> value;
+			}
+			catch(std::exception ex) 
+			{
+				std::cout << ex.what() << std::endl;
+			}
+			break;
+		case 6:
+			std::cout << "Введите ключ ";
+			std::cin >> key;
+			std::cout << "Введите новое значение ";
+			std::cin >> value;
+			try
+			{
 				tree.resetViewed();
 				tree.add(key, value, tree.root, tree.root);
-				break;
-			case 7:
-				std::cout << "Введите ключ ";
-				std::cin >> key;
+			}
+			catch (std::exception ex)
+			{
+				std::cout << ex.what() << std::endl;
+			}
+			break;
+		case 7:
+			std::cout << "Введите ключ ";
+			std::cin >> key;
+			try
+			{
 				tree.resetViewed();
 				tree.deleteNode(key, tree.root);
-				break;
-			case 8:
-				tree.printTreeH(tree.root);
-				break;
-			// Iterator
-			case 9:
-				while (!exit)
+			}
+			catch (std::exception ex)
+			{
+				std::cout << ex.what() << std::endl;
+			}
+			break;
+		case 8:
+			tree.printTreeH(tree.root);
+			break;
+		// Iterator
+		case 9:
+			while (!exit)
+			{
+				for (int i = 0; i < sizeof(iteratorMenu) / sizeof(std::string); i++)
 				{
-					for (int i = 0; i < sizeof(iteratorMenu) / sizeof(std::string); i++)
+					std::cout << iteratorMenu[i];
+				}
+				std::cin >> sw;
+				switch (sw)
+				{
+				case 1:
+					iterator = tree.begin();
+					break;
+				case 2:
+					try
 					{
-						std::cout << iteratorMenu[i];
-					}
-					std::cin >> sw;
-					switch (sw)
-					{
-					case 1:
-						iterator = tree.begin();
-						break;
-					case 2:
 						if (iterator.nodePtr)
 							std::cout << *iterator;
 						else
-							throw exception;
-						break;
-					case 3:
-						std::cout << "Введите новое значение ";
-						std::cin >> value;
-						*iterator = value;
-						break;
-					case 4:
+							throw std::exception("Исключение");
+					}
+					catch (std::exception ex)
+					{
+						std::cout << ex.what() << std::endl;
+					}
+					break;
+				case 3:
+					std::cout << "Введите новое значение ";
+					std::cin >> value;
+					*iterator = value;
+					break;
+				case 4:
+					try
+					{
 						iterator++;
-						break;
-					case 5:
+					}
+					catch (std::exception ex)
+					{
+						std::cout << ex.what() << std::endl;
+					}
+					break;
+				case 5:
+					try
+					{
 						iterator--;
-						break;
-					case 6:
-						std::cout << (iterator == tree.begin());
-						break;
-					case 7:
-						std::cout << (iterator == tree.end());
-						break;
-					case 8:
-						std::cout << (iterator != tree.begin());
-						break;
-					case 9:
-						std::cout << (iterator != tree.end());
-						break;
-					case 0:
-						exit = true;
-						break;
-					default:
-						std::cout << "Данного индекса не существует\n";
-						break;
 					}
+					catch (std::exception ex)
+					{
+						std::cout << ex.what() << std::endl;
+					}
+					break;
+				case 6:
+					std::cout << (iterator == tree.begin());
+					break;
+				case 7:
+					std::cout << (iterator == tree.end());
+					break;
+				case 8:
+					std::cout << (iterator != tree.begin());
+					break;
+				case 9:
+					std::cout << (iterator != tree.end());
+					break;
+				case 0:
+					exit = true;
+					break;
+				default:
+					std::cout << "Данного индекса не существует\n";
+					break;
 				}
-				exit = false;
-				break;
-			// ReverseIterator
-			case 10:
-				while (!exit)
+			}
+			exit = false;
+			break;
+		// ReverseIterator
+		case 10:
+			while (!exit)
+			{
+				for (int i = 0; i < sizeof(reverseIteratorMenu) / sizeof(std::string); i++)
 				{
-					for (int i = 0; i < sizeof(reverseIteratorMenu) / sizeof(std::string); i++)
+					std::cout << reverseIteratorMenu[i];
+				}
+				std::cin >> sw;
+				switch (sw)
+				{
+				case 1:
+					reverseIterator = tree.rBegin();
+					break;
+				case 2:
+					try
 					{
-						std::cout << reverseIteratorMenu[i];
-					}
-					std::cin >> sw;
-					switch (sw)
-					{
-					case 1:
-						reverseIterator = tree.rBegin();
-						break;
-					case 2:
 						if (reverseIterator.nodePtr)
 							std::cout << *reverseIterator;
 						else
-							throw exception;
-						break;
-					case 3:
-						std::cout << "Введите новое значение ";
-						std::cin >> value;
-						*reverseIterator = value;
-						break;
-					case 4:
+							throw std::exception("Исключение");
+					}
+					catch (std::exception ex)
+					{
+						std::cout << ex.what() << std::endl;
+					}
+					break;
+				case 3:
+					std::cout << "Введите новое значение ";
+					std::cin >> value;
+					*reverseIterator = value;
+					break;
+				case 4:
+					try 
+					{
 						reverseIterator++;
-						break;
-					case 5:
+					}
+					catch (std::exception ex) 
+					{
+						std::cout << ex.what() << std::endl;
+					}
+					break;
+				case 5:
+					try
+					{
 						reverseIterator--;
-						break;
-					case 6:
-						std::cout << (reverseIterator == tree.rBegin());
-						break;
-					case 7:
-						std::cout << (reverseIterator == tree.rEnd());
-						break;
-					case 8:
-						std::cout << (reverseIterator != tree.rBegin());
-						break;
-					case 9:
-						std::cout << (reverseIterator != tree.rEnd());
-						break;
-					case 0:
-						exit = true;
-						break;
-					default:
-						std::cout << "Данного индекса не существует\n";
-						break;
 					}
-				}
-				exit = false;
-				break;
-			// Extra operations
-			case 11:
-				while (!exit)
-				{
-					for (int i = 0; i < sizeof(extraMenu) / sizeof(std::string); i++)
+					catch (std::exception ex)
 					{
-						std::cout << extraMenu[i];
+						std::cout << ex.what() << std::endl;
 					}
-					std::cin >> sw;
-					switch (sw)
-					{
-					case 1:
-						tree.t_Lt_Rt(tree.root);
-						break;
-					case 2:
-						std::cout << tree.getTreeHeight(tree.root) << std::endl;
-						break;
-					case 3:
-						std::cout << "Введите размер ";
-						std::cin >> value;
-						test_rand(value);
-						break;
-					case 4:
-						std::cout << "Введите размер ";
-						std::cin >> value;
-						test_ord(value);
-						break;
-					case 5:
-						std::cout << tree.getViewedNodes() << std::endl;
-						break;
-					case 0:
-						exit = true;
-						break;
-					default:
-						std::cout << "Данного индекса не существует\n";
-						break;
-					}
+					break;
+				case 6:
+					std::cout << (reverseIterator == tree.rBegin());
+					break;
+				case 7:
+					std::cout << (reverseIterator == tree.rEnd());
+					break;
+				case 8:
+					std::cout << (reverseIterator != tree.rBegin());
+					break;
+				case 9:
+					std::cout << (reverseIterator != tree.rEnd());
+					break;
+				case 0:
+					exit = true;
+					break;
+				default:
+					std::cout << "Данного индекса не существует\n";
+					break;
 				}
-				exit = false;
-				break;
-			case 0:
-				exit = true;
-				break;
-			default:
-				std::cout << "Данного индекса не существует\n";
-				break;
 			}
+			exit = false;
+			break;
+		// Extra operations
+		case 11:
+			while (!exit)
+			{
+				for (int i = 0; i < sizeof(extraMenu) / sizeof(std::string); i++)
+				{
+					std::cout << extraMenu[i];
+				}
+				std::cin >> sw;
+				switch (sw)
+				{
+				case 1:
+					tree.t_Lt_Rt(tree.root);
+					break;
+				case 2:
+					std::cout << tree.getTreeHeight(tree.root) << std::endl;
+					break;
+				case 3:
+					std::cout << "Введите размер ";
+					std::cin >> value;
+					test_rand(value);
+					break;
+				case 4:
+					std::cout << "Введите размер ";
+					std::cin >> value;
+					test_ord(value);
+					break;
+				case 5:
+					std::cout << tree.getViewedNodes() << std::endl;
+					break;
+				case 0:
+					exit = true;
+					break;
+				default:
+					std::cout << "Данного индекса не существует\n";
+					break;
+				}
+			}
+			exit = false;
+			break;
+		case 0:
+			exit = true;
+			break;
+		default:
+			std::cout << "Данного индекса не существует\n";
+			break;
 		}
-		catch (const std::exception& ex)
-		{
-			std::cout << ex.what() << std::endl;
-		}
-
 	}
 	return 0;
 }
