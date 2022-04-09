@@ -83,30 +83,18 @@ void test_rand(int n)
 		else //90% успешных операций
 		{
 			int ind = rand() % n;
-			try 
-			{
-				tree.resetViewed();
-				tree.deleteNode(m[ind], tree.root);
-				
-			}
-			catch (...) { }
+			tree.resetViewed();
+			tree.deleteNode(m[ind], tree.root);
+
 			D += tree.getViewedNodes();
 			INT_64 key = LineRand();
-			try
-			{
-				tree.resetViewed();
-				tree.add(key, 1, tree.root, tree.root);
-				
-			}
-			catch (...) { }
+			tree.resetViewed();
+			tree.add(key, 1, tree.root, tree.root);
 			I += tree.getViewedNodes();
 			m[ind] = key;
-			try
-			{
-				tree.resetViewed();
-				tree.read(m[rand() % n], tree.root);
-			}
-			catch (...) { }
+
+			tree.resetViewed();
+			tree.read(m[rand() % n], tree.root);
 			S += tree.getViewedNodes();
 		}
 	}
