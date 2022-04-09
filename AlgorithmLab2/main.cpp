@@ -58,12 +58,14 @@ void test_rand(int n)
 	{
 		if (i % 10 == 0) //10% промахов
 		{
+			std::cout << "ПРОМАХИ\n";
 			try 
 			{
 				tree.resetViewed();
 				tree.deleteNode(LineRand(), tree.root);
 			}
 			catch (...) { }
+			std::cout << "После удаления: " << tree.getSize() << std::endl;
 			D += tree.getViewedNodes();
 			try 
 			{
@@ -71,6 +73,7 @@ void test_rand(int n)
 				tree.add(m[rand() % n], 1, tree.root, tree.root);
 			}
 			catch (...) { }
+			std::cout << "После вставки: " << tree.getSize() << std::endl;
 			I += tree.getViewedNodes();
 			try
 			{
@@ -82,25 +85,26 @@ void test_rand(int n)
 		}
 		else //90% успешных операций
 		{
+			std::cout << "УСПЕШНАЯ ОПЕРАЦИЯ\n";
 			int ind = rand() % n;
 			try 
 			{
 				tree.resetViewed();
 				tree.deleteNode(m[ind], tree.root);
-				
 			}
 			catch (...) { }
+			std::cout << "После удаления: " << tree.getSize() << std::endl;
 			D += tree.getViewedNodes();
 			INT_64 key = LineRand();
 			try
 			{
 				tree.resetViewed();
 				tree.add(key, 1, tree.root, tree.root);
-				
+				m[ind] = key;
 			}
 			catch (...) { }
+			std::cout << "После Вставки: " << tree.getSize() << std::endl;
 			I += tree.getViewedNodes();
-			m[ind] = key;
 			try
 			{
 				tree.resetViewed();
@@ -109,6 +113,7 @@ void test_rand(int n)
 			catch (...) { }
 			S += tree.getViewedNodes();
 		}
+		std::cout << std::endl;
 	}
 	//конец теста
 	//вывод результатов:
@@ -242,14 +247,14 @@ int main()
 	bool exit = false;
 
 	// Для отладки
-	tree.add(25, 25, tree.root, tree.root);
-	tree.add(13, 13, tree.root, tree.root);
-	tree.add(100, 100, tree.root, tree.root);
-	tree.add(15, 15, tree.root, tree.root);
-	tree.add(2, 2, tree.root, tree.root);
-	tree.add(63, 63, tree.root, tree.root);
-	tree.add(8, 8, tree.root, tree.root);
-	tree.add(42, 42, tree.root, tree.root);
+	//tree.add(25, 25, tree.root, tree.root);
+	//tree.add(13, 13, tree.root, tree.root);
+	//tree.add(100, 100, tree.root, tree.root);
+	//tree.add(15, 15, tree.root, tree.root);
+	//tree.add(2, 2, tree.root, tree.root);
+	//tree.add(63, 63, tree.root, tree.root);
+	//tree.add(8, 8, tree.root, tree.root);
+	//tree.add(42, 42, tree.root, tree.root);
 
 	std::string firstMenu[] = 
 	{

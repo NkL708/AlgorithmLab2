@@ -196,16 +196,16 @@ inline void Tree<Data, Key>::add(Key key, Data data, Node*& root, Node*& parent)
 	// Нашли место
 	if (!root)
 	{
-		root = new Node(key, data, nullptr, nullptr,
-			getSize() > 0 ? parent : nullptr);
+		Node* temp = getSize() > 0 ? parent : nullptr;
+		root = new Node(key, data, nullptr, nullptr, temp);
 		size++;
 	}
+	else if (key == root->key)
+		throw std::exception("Исключение");
 	else if (key < root->key)
 		add(key, data, root->left, root);
 	else if (key > root->key)
 		add(key, data, root->right, root);
-	else if (key == root->key)
-		throw std::exception("Исключение");
 }
 
 template<typename Data, typename Key>
@@ -222,13 +222,22 @@ inline void Tree<Data, Key>::deleteNode(Key key, Node*& root)
 	else if (key == root->key)
 	{
 		if (!root->left && !root->right) 
+		{
 			root = nullptr;
+			size--;
+		}
 		else if (root->left) 
+		{
 			root = root->left;
+			size--;
+		}
 		else if (root->right) 
+		{
 			root = root->right;
+			size--;
+		}
 		// Есть два потомка
-		else
+		else if (root->left && root->right)
 		{
 			// Находим минимальный элемент в правом поддереве
 			Node* temp = getMinNode(root->right);
@@ -236,14 +245,11 @@ inline void Tree<Data, Key>::deleteNode(Key key, Node*& root)
 			Data tempData = temp->data;
 			Key tempKey = temp->key;
 			// Удаляем его
-			deleteNode(temp->key, root);
+			deleteNode(tempKey, root);
 			// Вставляем его данные в удалённый элемент
 			root->data = tempData;
 			root->key = tempKey;
-			// Размер уже не уменьшаем
-			return;
 		}
-		size--;
 	}
 }
 
