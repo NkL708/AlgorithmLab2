@@ -169,7 +169,7 @@ inline Data Tree<Data, Key>::read(Key key, Node*& root)
 		throw std::exception("Исключение");
 	if (key < root->key)
 		return read(key, root->left);
-	else if (key > root->key)
+	if (key > root->key)
 		return read(key, root->right);
 	else if (key == root->key)
 		return root->data;
@@ -180,10 +180,10 @@ inline void Tree<Data, Key>::edit(Key key, Data newData, Node*& root)
 {
 	viewedNodes++;
 	if (!root)
-		throw std::exception("Исключение");
-	if (key < root->key) 
+		return;
+	if (key < root->key)
 		edit(key, newData, root->left);
-	else if (key > root->key)
+	if (key > root->key)
 		edit(key, newData, root->right);
 	else if (key == root->key)
 		root->data = newData;
@@ -196,15 +196,15 @@ inline void Tree<Data, Key>::add(Key key, Data data, Node*& root, Node*& parent)
 	// Нашли место
 	if (!root)
 	{
-		Node* temp = getSize() > 0 ? parent : nullptr;
-		root = new Node(key, data, nullptr, nullptr, temp);
+		root = new Node(key, data, nullptr, nullptr, 
+			getSize() > 0 ? parent : nullptr);
 		size++;
 	}
-	else if (key == root->key)
-		throw std::exception("Исключение");
-	else if (key < root->key)
+	if (key == root->key)
+		return;
+	if (key < root->key)
 		add(key, data, root->left, root);
-	else if (key > root->key)
+	if (key > root->key)
 		add(key, data, root->right, root);
 }
 
@@ -213,29 +213,20 @@ inline void Tree<Data, Key>::deleteNode(Key key, Node*& root)
 {
 	viewedNodes++;
 	if (!root)
-		throw std::exception("Исключение");
+		return;
 	if (key < root->key)
 		deleteNode(key, root->left);
-	else if (key > root->key)
+	if (key > root->key)
 		deleteNode(key, root->right);
 	// Нашли элемент, который нужно удалить
-	else if (key == root->key)
+	if (key == root->key) 
 	{
-		if (!root->left && !root->right) 
-		{
+		if (!root->left && !root->right)
 			root = nullptr;
-			size--;
-		}
-		else if (root->left) 
-		{
-			root = root->left;
-			size--;
-		}
-		else if (root->right) 
-		{
+		else if (!root->left)
 			root = root->right;
-			size--;
-		}
+		else if (!root->right)
+			root = root->left;
 		// Есть два потомка
 		else if (root->left && root->right)
 		{
@@ -249,7 +240,10 @@ inline void Tree<Data, Key>::deleteNode(Key key, Node*& root)
 			// Вставляем его данные в удалённый элемент
 			root->data = tempData;
 			root->key = tempKey;
+			// Размер не уменьшаем
+			return;
 		}
+		size--;
 	}
 }
 
