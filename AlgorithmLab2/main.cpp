@@ -88,15 +88,24 @@ void test_rand(int n)
 
 			D += tree.getViewedNodes();
 			INT_64 key = LineRand();
-			tree.resetViewed();
-			tree.add(key, 1, tree.root, tree.root);
+			try
+			{
+				tree.resetViewed();
+				tree.add(key, 1, tree.root, tree.root);
+				
+			}
+			catch (...) { }
 			I += tree.getViewedNodes();
 			m[ind] = key;
-
-			tree.resetViewed();
-			tree.read(m[rand() % n], tree.root);
+			try
+			{
+				tree.resetViewed();
+				tree.read(m[rand() % n], tree.root);
+			}
+			catch (...) { }
 			S += tree.getViewedNodes();
 		}
+		std::cout << std::endl;
 	}
 	//конец теста
 	//вывод результатов:
@@ -230,14 +239,14 @@ int main()
 	bool exit = false;
 
 	// Для отладки
-	tree.add(25, 25, tree.root, tree.root);
-	tree.add(13, 13, tree.root, tree.root);
-	tree.add(100, 100, tree.root, tree.root);
-	tree.add(15, 15, tree.root, tree.root);
-	tree.add(2, 2, tree.root, tree.root);
-	tree.add(63, 63, tree.root, tree.root);
-	tree.add(8, 8, tree.root, tree.root);
-	tree.add(42, 42, tree.root, tree.root);
+	//tree.add(25, 25, tree.root, tree.root);
+	//tree.add(13, 13, tree.root, tree.root);
+	//tree.add(100, 100, tree.root, tree.root);
+	//tree.add(15, 15, tree.root, tree.root);
+	//tree.add(2, 2, tree.root, tree.root);
+	//tree.add(63, 63, tree.root, tree.root);
+	//tree.add(8, 8, tree.root, tree.root);
+	//tree.add(42, 42, tree.root, tree.root);
 
 	std::string firstMenu[] = 
 	{
