@@ -317,43 +317,22 @@ int main()
 			std::cin >> key;
 			std::cout << "Введите новое значение ";
 			std::cin >> value;
-			try 
-			{
-				tree.resetViewed();
-				tree.edit(key, value, tree.root);
-			}
-			catch(std::exception ex) 
-			{
-				std::cout << ex.what() << std::endl;
-			}
+			tree.resetViewed();
+			tree.edit(key, value, tree.root);
 			break;
 		case 6:
 			std::cout << "Введите ключ ";
 			std::cin >> key;
 			std::cout << "Введите новое значение ";
 			std::cin >> value;
-			try
-			{
-				tree.resetViewed();
-				tree.add(key, value, tree.root, tree.root);
-			}
-			catch (std::exception ex)
-			{
-				std::cout << ex.what() << std::endl;
-			}
+			tree.resetViewed();
+			tree.add(key, value, tree.root, tree.root);
 			break;
 		case 7:
 			std::cout << "Введите ключ ";
 			std::cin >> key;
-			try
-			{
-				tree.resetViewed();
-				tree.deleteNode(key, tree.root);
-			}
-			catch (std::exception ex)
-			{
-				std::cout << ex.what() << std::endl;
-			}
+			tree.resetViewed();
+			tree.deleteNode(key, tree.root);
 			break;
 		case 8:
 			tree.printTreeH(tree.root);
