@@ -148,7 +148,7 @@ inline void Tree<Data, Key>::clear(Node*& root)
 		clear(root->left);
 	if (root->right) 
 		clear(root->right);
-	root = nullptr;
+	delete root;
 	size--;
 }
 
@@ -221,12 +221,23 @@ inline void Tree<Data, Key>::deleteNode(Key key, Node*& root)
 	// Нашли элемент, который нужно удалить
 	if (key == root->key) 
 	{
-		if (!root->left && !root->right)
+		if (!root->left && !root->right) 
+		{
+			delete root;
 			root = nullptr;
-		else if (!root->left)
-			root = root->right;
-		else if (!root->right)
-			root = root->left;
+		}
+		else if (!root->left) 
+		{
+			Node* temp = root->right;
+			delete root;
+			root = temp;
+		}
+		else if (!root->right) 
+		{
+			Node* temp = root->left;
+			delete root;
+			root = temp;
+		}
 		// Есть два потомка
 		else if (root->left && root->right)
 		{
