@@ -58,23 +58,14 @@ void test_rand(int n)
 	{
 		if (i % 10 == 0) //10% промахов
 		{
-			std::cout << "ПРОМАХИ\n";
-			try 
-			{
-				tree.resetViewed();
-				tree.deleteNode(LineRand(), tree.root);
-			}
-			catch (...) { }
-			std::cout << "После удаления: " << tree.getSize() << std::endl;
+			tree.resetViewed();
+			tree.deleteNode(LineRand(), tree.root);
 			D += tree.getViewedNodes();
-			try 
-			{
-				tree.resetViewed();
-				tree.add(m[rand() % n], 1, tree.root, tree.root);
-			}
-			catch (...) { }
-			std::cout << "После вставки: " << tree.getSize() << std::endl;
+
+			tree.resetViewed();
+			tree.add(m[rand() % n], 1, tree.root, tree.root);
 			I += tree.getViewedNodes();
+
 			try
 			{
 				tree.resetViewed();
@@ -85,27 +76,18 @@ void test_rand(int n)
 		}
 		else //90% успешных операций
 		{
-			std::cout << "УСПЕШНАЯ ОПЕРАЦИЯ\n";
 			int ind = rand() % n;
-			try 
-			{
-				tree.resetViewed();
-				tree.deleteNode(m[ind], tree.root);
-			}
-			catch (...) { }
-			std::cout << "После удаления: " << tree.getSize() << std::endl;
+			tree.resetViewed();
+			tree.deleteNode(m[ind], tree.root);
 			D += tree.getViewedNodes();
+
 			INT_64 key = LineRand();
-			try
-			{
-				tree.resetViewed();
-				tree.add(key, 1, tree.root, tree.root);
-				m[ind] = key;
-			}
-			catch (...) { }
-			std::cout << "После Вставки: " << tree.getSize() << std::endl;
+			tree.resetViewed();
+			tree.add(key, 1, tree.root, tree.root);
 			I += tree.getViewedNodes();
-			try
+			m[ind] = key;
+
+			try 
 			{
 				tree.resetViewed();
 				tree.read(m[rand() % n], tree.root);
@@ -113,7 +95,6 @@ void test_rand(int n)
 			catch (...) { }
 			S += tree.getViewedNodes();
 		}
-		std::cout << std::endl;
 	}
 	//конец теста
 	//вывод результатов:
@@ -162,59 +143,43 @@ void test_ord(int n)
 		{
 			int k = LineRand() % (10000 * n);
 			k = k + !(k % 2); //случайный нечётный ключ
-			try
-			{
-				tree.resetViewed();
-				tree.deleteNode(k, tree.root);	
-			}
-			catch (...) {  }
+			tree.resetViewed();
+			tree.deleteNode(k, tree.root);	
 			D += tree.getViewedNodes();
-			try
-			{
-				tree.resetViewed();
-				tree.add(m[rand() % n], 1, tree.root, tree.root);
-				
-			}
-			catch (...) {  }
+
+			tree.resetViewed();
+			tree.add(m[rand() % n], 1, tree.root, tree.root);
 			I += tree.getViewedNodes();
+
 			k = LineRand() % (10000 * n);
 			k = k + !(k % 2); // случайный нечётный ключ
 			try 
 			{
 				tree.resetViewed();
 				tree.read(k, tree.root);
-				
 			}
-			//обработка исключения при ошибке операции поиска
 			catch (...) { }
 			S += tree.getViewedNodes();
 		}
 		else //90% успешных операций
 		{
 			int ind = rand() % n;
-			try
-			{
-				tree.resetViewed();
-				tree.deleteNode(m[ind], tree.root);
-			}
-			catch (...) { }
+			tree.resetViewed();
+			tree.deleteNode(m[ind], tree.root);
 			D += tree.getViewedNodes();
+
 			int k = LineRand() % (10000 * n);
-			try
-			{
-				k = k + k % 2; // случайный чётный ключ
-				tree.resetViewed();
-				tree.add(k, 1, tree.root, tree.root);
-			}
-			catch (...) { }
+			k = k + k % 2; // случайный чётный ключ
+			tree.resetViewed();
+			tree.add(k, 1, tree.root, tree.root);
 			I += tree.getViewedNodes();
 			m[ind] = k;
-			try 
+
+			try
 			{
 				tree.resetViewed();
 				tree.read(m[rand() % n], tree.root);
 			}
-			//обработка исключения при ошибке операции поиска
 			catch (...) { }
 			S += tree.getViewedNodes();
 		}
@@ -352,43 +317,22 @@ int main()
 			std::cin >> key;
 			std::cout << "Введите новое значение ";
 			std::cin >> value;
-			try 
-			{
-				tree.resetViewed();
-				tree.edit(key, value, tree.root);
-			}
-			catch(std::exception ex) 
-			{
-				std::cout << ex.what() << std::endl;
-			}
+			tree.resetViewed();
+			tree.edit(key, value, tree.root);
 			break;
 		case 6:
 			std::cout << "Введите ключ ";
 			std::cin >> key;
 			std::cout << "Введите новое значение ";
 			std::cin >> value;
-			try
-			{
-				tree.resetViewed();
-				tree.add(key, value, tree.root, tree.root);
-			}
-			catch (std::exception ex)
-			{
-				std::cout << ex.what() << std::endl;
-			}
+			tree.resetViewed();
+			tree.add(key, value, tree.root, tree.root);
 			break;
 		case 7:
 			std::cout << "Введите ключ ";
 			std::cin >> key;
-			try
-			{
-				tree.resetViewed();
-				tree.deleteNode(key, tree.root);
-			}
-			catch (std::exception ex)
-			{
-				std::cout << ex.what() << std::endl;
-			}
+			tree.resetViewed();
+			tree.deleteNode(key, tree.root);
 			break;
 		case 8:
 			tree.printTreeH(tree.root);
