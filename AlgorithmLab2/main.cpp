@@ -247,14 +247,14 @@ int main()
 	bool exit = false;
 
 	// Для отладки
-	//tree.add(25, 25, tree.root, tree.root);
-	//tree.add(13, 13, tree.root, tree.root);
-	//tree.add(100, 100, tree.root, tree.root);
-	//tree.add(15, 15, tree.root, tree.root);
-	//tree.add(2, 2, tree.root, tree.root);
-	//tree.add(63, 63, tree.root, tree.root);
-	//tree.add(8, 8, tree.root, tree.root);
-	//tree.add(42, 42, tree.root, tree.root);
+	tree.add(25, 25, tree.root, tree.root);
+	tree.add(13, 13, tree.root, tree.root);
+	tree.add(100, 100, tree.root, tree.root);
+	tree.add(15, 15, tree.root, tree.root);
+	tree.add(2, 2, tree.root, tree.root);
+	tree.add(63, 63, tree.root, tree.root);
+	tree.add(8, 8, tree.root, tree.root);
+	tree.add(42, 42, tree.root, tree.root);
 
 	std::string firstMenu[] = 
 	{
